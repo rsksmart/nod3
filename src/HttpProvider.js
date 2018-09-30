@@ -9,7 +9,7 @@ export class HttpProvider extends Provider {
   send (payload) {
     let url = this.url
     let headers = { 'Content-Type': 'application/json' }
-    return axios.post(url, payload, { headers })
+    return axios.post(url, payload, { headers }).then(res => res.data)
   }
   isConnected () {
     return this.send(jsonRpcPayload('net_listening'))

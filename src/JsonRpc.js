@@ -6,8 +6,7 @@ export class JsonRpc {
 
   async send (payload, isBatch) {
     try {
-      let res = await this.provider.send(payload)
-      let data = res.data
+      let data = await this.provider.send(payload)
       if (!data) throw new Error('No data')
       if (isBatch) return data.map(d => this.checkData(d))
       else return this.checkData(data)
