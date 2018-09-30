@@ -34,15 +34,34 @@ export const testNod3 = options => {
         })
       })
 
-      describe('batchRequest getBlock', () => {
-        let params = [...new Array(20)].map(a => [Math.floor(Math.random() * 600000), true])
-        let total = params.length
+      let params = [...new Array(20)].map(a => [Math.floor(Math.random() * 600000), false])
+      let total = params.length
+
+      describe(`batchRequest getBlock [${total}] by NUMBER `, () => {
+
         it(`should be return an array of ${total} blocks`, async () => {
           let data = await nod3.batchRequest('getBlock', params)
           expect(data).to.be.an('array')
           expect(data.length === total)
           data.forEach(block => {
             testBlock(block)
+          })
+          params = new Set()
+          data.forEach(block => {
+            params.add(block.parentHash)
+            return block.uncles.forEach(u => params.add(u))
+          })
+          params = [...params].slice(0, total).map(h => [h, false])
+          
+          describe(`batchRequest getBlock [${total}] by HASH `, () => {
+            it(`should be return an array of ${total} blocks`, async () => {
+              let data = await nod3.batchRequest('getBlock', params)
+              expect(data).to.be.an('array')
+              expect(data.length === total)
+              data.forEach(block => {
+                testBlock(block)
+              })
+            })
           })
         })
       })
