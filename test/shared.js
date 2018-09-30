@@ -52,7 +52,7 @@ export const testNod3 = options => {
             return block.uncles.forEach(u => params.add(u))
           })
           params = [...params].slice(0, total).map(h => [h, false])
-          
+
           describe(`batchRequest getBlock [${total}] by HASH `, () => {
             it(`should be return an array of ${total} blocks`, async () => {
               let data = await nod3.batchRequest('getBlock', params)
@@ -70,7 +70,7 @@ export const testNod3 = options => {
 }
 
 export const testBlock = block => {
-  describe(`block ${block.number}`, () => {
+  describe(`block ${(block) ? block.number : block}`, () => {
     it(`should be a block`, () => {
       expect(block.number).to.be.an('number')
       expect(isBlockHash(block.hash)).to.be.equal(true)
