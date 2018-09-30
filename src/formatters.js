@@ -1,4 +1,5 @@
 export const formatKey = (obj, key, formatter) => {
+  if (!obj) return obj
   let value = obj[key]
   if (undefined !== value) {
     obj[key] = formatter(value)
