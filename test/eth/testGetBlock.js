@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 
 let blockNumber = global.blockNumber
+let nod3 = global.nod3
 
 
 describe('getBlock', () => {
