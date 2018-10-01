@@ -58,23 +58,21 @@ function addModule (mod, parent) {
   return new Proxy(mod, {
     get (obj, prop) {
       let value = obj[prop]
-      if (typeof value === 'function') {
-        // Module method proxy
-        return new Proxy(value, {
-          //  intercept function calls
-          apply (fn, thisArg, args) {
-            let aLen = args.length
-            // batch request
-            if (fn.length < aLen && isBatch(args[aLen - 1])) {
-              return fn(...args)
-            }
-            // single execution
-            const send = Nod3.send.bind(parent)
-            return send(fn(...args))
+      if (typeof value !== 'function') return value
+      // Module method proxy
+      return new Proxy(value, {
+        //  intercept function calls
+        apply (fn, thisArg, args) {
+          let aLen = args.length
+          // batch request
+          if (fn.length < aLen && isBatch(args[aLen - 1])) {
+            return fn(...args)
           }
-        })
-      }
-      return value
+          // single execution
+          const send = Nod3.send.bind(parent)
+          return send(fn(...args))
+        }
+      })
     }
   })
 }
