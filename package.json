@@ -1,0 +1,42 @@
+{
+  "name": "nod3",
+  "version": "0.0.1",
+  "description": "Minimal Javascript RPC communication with Ethereum / RSK node",
+  "main": "index.js",
+  "scripts": {
+    "dev": "./node_modules/.bin/nodemon src/ --exec babel-node",
+    "build": "npm run clean && ./node_modules/.bin/babel src -d dist",
+    "clean": "rm -rf dist",
+    "md": "mkdir dist",
+    "lint": "./node_modules/.bin/eslint src/**/*",
+    "test": "./node_modules/.bin/mocha --require babel-core/register"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emiliorizzo/nod3.git"
+  },
+  "author": "emi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emiliorizzo/nod3/issues"
+  },
+  "homepage": "https://github.com/emiliorizzo/nod3#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-mocha": "^5.2.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "mocha": "^5.2.0",
+    "mocha-eslint": "^4.1.0",
+    "nodemon": "^1.18.2"
+  }
+}
