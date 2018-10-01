@@ -4,7 +4,6 @@
   "description": "Minimal Javascript RPC communication with Ethereum / RSK node",
   "main": "index.js",
   "scripts": {
-    "dev": "./node_modules/.bin/nodemon src/ --exec babel-node",
     "build": "npm run clean && ./node_modules/.bin/babel src -d dist",
     "clean": "rm -rf dist",
     "md": "mkdir dist",
@@ -36,7 +35,6 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.2.0",
-    "mocha-eslint": "^4.1.0",
-    "nodemon": "^1.18.2"
+    "mocha-eslint": "^4.1.0"
   }
 }
