@@ -10,6 +10,14 @@ export const isBlockHash = value => checkBlockHash(value) !== null
 export const isHashOrNuber = (hashOrNumber, toHex = true) => {
   let hash = (isBlockHash(hashOrNumber)) ? hashOrNumber : null
   let number = (!isNaN(parseInt(hashOrNumber)) && !hash) ? hashOrNumber : null
-  number = (number && toHex) ? '0x' + Number(hashOrNumber).toString(16) : number
+  number = (number && toHex) ? toHexStr(hashOrNumber) : number
   return { hash, number }
 }
+
+export const isHexStr = str => /^0x[0-9a-f]*$/.test(str)
+
+export const toHexStr = (value, ox = '0x') => {
+  if (isHexStr(value) || value === null) return value
+  let hex = ox + Number(value).toString(16)
+  return (parseInt(hex) === Number(value)) ? hex : value
+} 
