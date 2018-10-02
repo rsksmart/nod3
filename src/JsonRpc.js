@@ -4,18 +4,22 @@ export class JsonRpc {
     this.provider = provider
   }
 
-  async send (method, params) {
+  async send (payload, isBatch) {
     try {
-      let payload = this.toPayload(method, params)
       let res = await this.provider.send(payload)
       let data = res.data
       if (!data) throw new Error('No data')
-      if (data.error) throw new Error(data.error)
-      return (this.isValidResponse(data)) ? data.result : null
+      if (isBatch) return data.map(d => this.checkData(d))
+      else return this.checkData(data)
     } catch (err) {
       return Promise.reject(err)
     }
   }
+
+  checkData (data) {
+    return (this.isValidResponse(data)) ? data.result : null
+  }
+
   toPayload (method, params) {
     let id = this.getId()
     return jsonRpcPayload(method, params, id)
@@ -35,10 +39,6 @@ export class JsonRpc {
         typeof message.id === 'number' &&
         message.result !== undefined
     }
-  }
-
-  isConnected () {
-    return this.provider.isConnected()
   }
 }
 
