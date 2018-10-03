@@ -1,10 +1,10 @@
-import { Nod3, HttpProvider } from '../src/'
-import { testNod3 } from './shared'
+import { nod3Creator, testNod3 } from './shared'
 import { expect } from 'chai'
 import { checkConection } from './checkConnection'
 
 const blockNumber = process.env['blockNumber'] || Math.floor(Math.random() * 600000)
-let nod3 = new Nod3(new HttpProvider())
+const nod3 = nod3Creator()
+
 global.nod3 = nod3
 global.blockNumber = blockNumber
 

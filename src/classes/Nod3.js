@@ -1,23 +1,28 @@
-import { JsonRpc } from './JsonRpc'
 import * as utils from '../lib/utils'
 import eth from '../modules/eth'
 import rsk from '../modules/rsk'
 import net from '../modules/net'
+import { Subscribe } from '../classes/Subscribe'
+import { HttpProvider } from '../classes/HttpProvider'
+import { NOD3_MODULE } from '../lib/types'
 
 const IS_BATCH = 'isBatch' + Math.random()
 const isBatch = (key) => (key) ? key === IS_BATCH : IS_BATCH
 
 export class Nod3 {
-  constructor (provider, options) {
-    this.rpc = new JsonRpc(provider)
+  constructor (provider) {
+    this.provider = provider
+    this.rpc = provider.rpc
+    this.isBatch = isBatch
     this.utils = utils
     this.eth = addModule(eth, this)
     this.rsk = addModule(rsk, this)
     this.net = addModule(net, this)
+    this.subscribe = new Subscribe(this)
   }
 
   isConnected () {
-    return this.rpc.send(this.rpc.toPayload('net_listening'))
+    return this.rpc.sendMethod('net_listening')
   }
 
   async batchRequest (commands, methodName) {
@@ -34,7 +39,7 @@ export class Nod3 {
         return method(...params, isBatch())
       })
       let payload = batch.map(b => this.rpc.toPayload(b.method, b.params))
-      let data = await this.rpc.send(payload, true)
+      let data = await this.rpc.send(payload)
       return data.map((d, i) => format(d, batch[i].formatter))
     } catch (err) {
       return Promise.reject(err)
@@ -44,7 +49,7 @@ export class Nod3 {
   static send (payload) {
     let method, params, formatter
     ({ method, params, formatter } = payload)
-    return this.rpc.send(this.rpc.toPayload(method, params))
+    return this.rpc.sendMethod(method, params)
       .then(res => format(res, formatter))
   }
 }
@@ -53,10 +58,11 @@ function format (data, formatter) {
   return (formatter) ? formatter(data) : data
 }
 
-function addModule (mod, parent) {
+function addModule (mod, nod3) {
   // Module proxy
   return new Proxy(mod, {
     get (obj, prop) {
+      if (prop === '_type') return NOD3_MODULE
       let value = obj[prop]
       if (typeof value !== 'function') return value
       // Module method proxy
@@ -69,10 +75,11 @@ function addModule (mod, parent) {
             return fn(...args)
           }
           // single execution
-          const send = Nod3.send.bind(parent)
-          return send(fn(...args))
+          return Nod3.send.bind(nod3)(fn(...args))
         }
       })
     }
   })
 }
+
+Nod3.providers = { HttpProvider }

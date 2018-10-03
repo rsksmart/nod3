@@ -1,14 +1,8 @@
 import { expect } from 'chai'
-import { isBlockHash } from '../../src/lib/utils';
-
+import { isBlockHash } from '../../src/lib/utils'
 
 let nod3 = global.nod3
-/* describe(`getTransaction #by hash`, () => {
-  it('should', () => {
-    expect(true).to.be.equal(false)
-  })
-})
- */
+
 describe('Get Transactions', () => {
   describe(`getTransaction #by block number, index`, () => {
     it('should returns a tx object', async () => {

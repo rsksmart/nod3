@@ -1,5 +1,12 @@
+import { Nod3 } from '../src/'
 import { expect } from 'chai'
 import { isBlockHash } from '../src/lib/utils'
+
+export const nod3Creator = () => {
+  const url = process.env['url']
+  let nod3 = new Nod3(new Nod3.providers.HttpProvider(url))
+  return nod3
+}
 
 export const testNod3 = (nod3, options) => {
   let blockNumber = options.blockNumber
@@ -9,7 +16,7 @@ export const testNod3 = (nod3, options) => {
 
   describe(`batch request: getBlock [${total}]`, () => {
     describe(`# by NUMBER `, () => {
-    
+
       it(`should be return an array of ${total} values`, async () => {
         let data = await nod3.batchRequest(params, 'eth.getBlock')
         expect(data).to.be.an('array')
@@ -41,9 +48,6 @@ export const testNod3 = (nod3, options) => {
       })
     })
   })
-
-  
-
   describe(`Mixed methods Batch request`, () => {
 
   })
