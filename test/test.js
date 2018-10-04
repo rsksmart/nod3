@@ -3,11 +3,14 @@ import { testNod3 } from './shared'
 import { expect } from 'chai'
 
 const blockNumber = process.env['blockNumber'] || Math.floor(Math.random() * 600000)
+let nod3
 global.blockNumber = blockNumber
+
 
 describe(`Testing with blockNumber:${blockNumber}`, () => {
   describe(`HTPP provider`, () => {
-    let nod3 = new Nod3(new HttpProvider())
+    nod3 = new Nod3(new HttpProvider())
+    global.nod3 = nod3
     describe('isConnected', () => {
       it('should be return a boolean', async () => {
         let connected = await nod3.isConnected()

@@ -4,31 +4,6 @@ import { isBlockHash } from '../src/lib/utils'
 export const testNod3 = (nod3, options) => {
   let blockNumber = options.blockNumber
 
-  describe('getBlock', () => {
-    let block
-
-    it('should be return a block by decimal number', async () => {
-      block = await nod3.eth.getBlock(blockNumber)
-      expect(block.number).to.be.equal(parseInt(blockNumber))
-    })
-
-    it('should be return a block by hash', async () => {
-      let hash = block.parentHash
-      block = null
-      block = await nod3.eth.getBlock(hash)
-      expect(block.number).to.be.equal(blockNumber - 1)
-      expect(block.hash).to.be.equal(hash)
-    })
-  })
-
-  describe('getBlocksByNumber', () => {
-
-    it('should be return an array', async () => {
-      let blocks = await nod3.rsk.getBlocksByNumber(blockNumber)
-      expect(blocks).to.be.an('array')
-    })
-  })
-
   let params = [...new Array(10)].map(a => [Math.floor(Math.random() * 600000), false])
   let total = params.length
 
