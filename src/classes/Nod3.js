@@ -2,6 +2,7 @@ import { JsonRpc } from './JsonRpc'
 import * as utils from '../lib/utils'
 import eth from '../modules/eth'
 import rsk from '../modules/rsk'
+import net from '../modules/net'
 
 const IS_BATCH = 'isBatch' + Math.random()
 const isBatch = (key) => (key) ? key === IS_BATCH : IS_BATCH
@@ -12,6 +13,7 @@ export class Nod3 {
     this.utils = utils
     this.eth = addModule(eth, this)
     this.rsk = addModule(rsk, this)
+    this.net = addModule(net, this)
   }
 
   isConnected () {

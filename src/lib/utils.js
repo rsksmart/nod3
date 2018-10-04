@@ -1,3 +1,5 @@
+import { NETWORKS } from './types'
+
 export const checkBlockHash = value => {
   value = String(value).toLowerCase()
   if (/^(0x)[0-9a-f]{64}$/.test(value)) return value
@@ -20,4 +22,7 @@ export const toHexStr = (value, ox = '0x') => {
   if (isHexStr(value) || value === null) return value
   let hex = ox + Number(value).toString(16)
   return (parseInt(hex) === Number(value)) ? hex : value
-} 
+}
+
+export const netName = id => NETWORKS[id]
+export const isNet = (id, name) => netName(id) === name
