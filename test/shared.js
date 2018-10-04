@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { isBlockHash } from '../src/utils'
+import { isBlockHash } from '../src/lib/utils'
 
 export const testNod3 = (nod3, options) => {
   let blockNumber = options.blockNumber

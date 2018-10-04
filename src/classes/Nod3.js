@@ -1,7 +1,7 @@
 import { JsonRpc } from './JsonRpc'
-import * as utils from './utils'
-import eth from './modules/eth'
-import rsk from './modules/rsk'
+import * as utils from '../lib/utils'
+import eth from '../modules/eth'
+import rsk from '../modules/rsk'
 
 const IS_BATCH = 'isBatch' + Math.random()
 const isBatch = (key) => (key) ? key === IS_BATCH : IS_BATCH

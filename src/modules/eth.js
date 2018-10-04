@@ -1,5 +1,5 @@
-import { blockFormatter } from '../formatters'
-import { isHashOrNuber } from '../utils'
+import { blockFormatter } from '../lib/formatters'
+import { isHashOrNuber } from '../lib/utils'
 
 export default {
   getBlock (hashOrNumber, txs = false) {
