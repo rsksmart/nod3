@@ -20,7 +20,6 @@ describe('waiting for new block', function () {
       assert(isBlockHash(data), data)
       done()
     })
-    setTimeout(done, 60000)
   })
 })
 
@@ -32,5 +31,30 @@ describe('remove newBlock filter', function () {
     expect(nod3.provider.pool.get(id)).to.be.equal(undefined)
     let nodeFilter = await nod3.rpc.sendMethod('eth_getFilterChanges', id)
     expect(nodeFilter).to.be.equal(null)
+    return Promise.resolve()
+  })
+})
+
+let sub
+
+describe('subscribe to method eth.syncing', () => {
+  it('should create a subscription', async function () {
+    sub = await nod3.subscribe.method('eth.syncing')
+    expect(sub).to.be.instanceOf(Subscription)
+    return Promise.resolve()
+  })
+})
+
+describe('waiting subscription events', function () {
+  it('sould be a valid method event', function (done) {
+    this.timeout(60000)
+    sub.on('data', data => {
+      console.log(data)
+      expect(data).to.satisfy(function (data) {
+        return data === true || data === false || typeof data === 'object'
+      })
+      sub.delete()
+      done()
+    })
   })
 })
