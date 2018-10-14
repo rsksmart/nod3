@@ -4,15 +4,20 @@
     this.provider = provider;
   }
 
-  async send(payload, isBatch) {
+  async send(payload) {
     try {
       let data = await this.provider.send(payload);
-      if (!data) throw new Error('No data');
-      if (isBatch) return data.map(d => this.checkData(d));else
+      if (undefined === data) throw new Error('No data');
+      if (Array.isArray(payload)) return data.map(d => this.checkData(d));else
       return this.checkData(data);
     } catch (err) {
       return Promise.reject(err);
     }
+  }
+
+  sendMethod(method, params) {
+    let payload = this.toPayload(method, params);
+    return this.send(payload);
   }
 
   checkData(data) {

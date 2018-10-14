@@ -3,7 +3,6 @@ const ETH_MAINNET = exports.ETH_MAINNET = 'Ethereum Mainnet';
 const RSK_MAINNET = exports.RSK_MAINNET = 'RSK Mainnet';
 const RSK_TESTNET = exports.RSK_TESTNET = 'RSK Testnet';
 
-
 const NET_NAMES = exports.NET_NAMES = {
   ETH_MAINNET,
   RSK_MAINNET,
@@ -18,3 +17,11 @@ const NETWORKS = exports.NETWORKS = {
   30: RSK_MAINNET,
   31: RSK_TESTNET,
   42: 'Kovan Testnet' };
+
+
+const SUBSCRIPTIONS = exports.SUBSCRIPTIONS = {
+  METHOD: 'method',
+  FILTER: 'filter' };
+
+
+const NOD3_MODULE = exports.NOD3_MODULE = 'nod3Module';

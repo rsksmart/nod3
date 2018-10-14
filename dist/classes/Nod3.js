@@ -1,23 +1,30 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Nod3 = undefined;var _JsonRpc = require('./JsonRpc');
-var _utils = require('../lib/utils');var utils = _interopRequireWildcard(_utils);
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Nod3 = undefined;var _utils = require('../lib/utils');var utils = _interopRequireWildcard(_utils);
 var _eth = require('../modules/eth');var _eth2 = _interopRequireDefault(_eth);
 var _rsk = require('../modules/rsk');var _rsk2 = _interopRequireDefault(_rsk);
-var _net = require('../modules/net');var _net2 = _interopRequireDefault(_net);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}
+var _net = require('../modules/net');var _net2 = _interopRequireDefault(_net);
+var _Subscribe = require('../classes/Subscribe');
+var _HttpProvider = require('../classes/HttpProvider');
+var _types = require('../lib/types');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}
 
 const IS_BATCH = 'isBatch' + Math.random();
 const isBatch = key => key ? key === IS_BATCH : IS_BATCH;
 
 class Nod3 {
-  constructor(provider, options) {
-    this.rpc = new _JsonRpc.JsonRpc(provider);
+  constructor(provider) {
+    this.provider = provider;
+    this.rpc = provider.rpc;
+    this.isBatch = isBatch;
     this.utils = utils;
     this.eth = addModule(_eth2.default, this);
     this.rsk = addModule(_rsk2.default, this);
     this.net = addModule(_net2.default, this);
+    this.subscribe = new _Subscribe.Subscribe(this);
   }
 
   isConnected() {
-    return this.rpc.send(this.rpc.toPayload('net_listening'));
+    return this.rpc.sendMethod('net_listening').
+    then(res => res === true).
+    catch(() => false);
   }
 
   async batchRequest(commands, methodName) {
@@ -34,7 +41,7 @@ class Nod3 {
         return method(...params, isBatch());
       });
       let payload = batch.map(b => this.rpc.toPayload(b.method, b.params));
-      let data = await this.rpc.send(payload, true);
+      let data = await this.rpc.send(payload);
       return data.map((d, i) => format(d, batch[i].formatter));
     } catch (err) {
       return Promise.reject(err);
@@ -44,7 +51,7 @@ class Nod3 {
   static send(payload) {
     let method, params, formatter;
     ({ method, params, formatter } = payload);
-    return this.rpc.send(this.rpc.toPayload(method, params)).
+    return this.rpc.sendMethod(method, params).
     then(res => format(res, formatter));
   }}exports.Nod3 = Nod3;
 
@@ -53,10 +60,11 @@ function format(data, formatter) {
   return formatter ? formatter(data) : data;
 }
 
-function addModule(mod, parent) {
+function addModule(mod, nod3) {
   // Module proxy
   return new Proxy(mod, {
     get(obj, prop) {
+      if (prop === '_type') return _types.NOD3_MODULE;
       let value = obj[prop];
       if (typeof value !== 'function') return value;
       // Module method proxy
@@ -69,10 +77,11 @@ function addModule(mod, parent) {
             return fn(...args);
           }
           // single execution
-          const send = Nod3.send.bind(parent);
-          return send(fn(...args));
+          return Nod3.send.bind(nod3)(fn(...args));
         } });
 
     } });
 
 }
+
+Nod3.providers = { HttpProvider: _HttpProvider.HttpProvider };

@@ -42,6 +42,14 @@ var _utils = require('../lib/utils');exports.default =
   getCode(address, block = 'latest') {
     block = parseBlockArg(block);
     return { method: 'eth_getCode', params: [address, block] };
+  },
+
+  syncing() {
+    return { method: 'eth_syncing' };
+  },
+
+  blockNumber() {
+    return { method: 'eth_blockNumber' };
   } };
 
 
