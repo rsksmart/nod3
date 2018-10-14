@@ -20,11 +20,10 @@ export class Subscribe {
       if (!filterDef) throw new Error(`Unknown filter: ${filterName}`)
       filterDef = filterDef()
       let id = await this.send(filterDef)
-      let filter = new Subscription(id, SUBSCRIPTIONS.FILTER)
-      filter.delete = () => this.remove(id)
+      if (!id) throw new Error('Node returns invalid id')
       let payload = this.rpc.toPayload('eth_getFilterChanges', [id])
       let cb = filterDef.cb
-      return addSubscription.bind(this)(filter, payload, cb)
+      return addSubscription.bind(this)(id, SUBSCRIPTIONS.FILTER, payload, cb)
     } catch (err) {
       return Promise.reject(err)
     }
@@ -41,8 +40,9 @@ export class Subscribe {
       args.push(this.nod3.isBatch())
       let m = method(...args)
       let payload = this.rpc.toPayload(m.method, m.params)
-      let subscription = new Subscription(methodId.bind(this)(), SUBSCRIPTIONS.METHOD)
-      return addSubscription.bind(this)(subscription, payload)
+      let type = SUBSCRIPTIONS.METHOD
+      let id = methodId.bind(this)(type)
+      return addSubscription.bind(this)(id, type, payload)
     } catch (err) {
       return Promise.reject(err)
     }
@@ -56,29 +56,57 @@ export class Subscribe {
         let removed = await this.rpc.sendMethod('eth_uninstallFilter', sub.id)
         if (!removed) throw new Error('The node did not remove the filter')
       }
-      this.provider.unsubscribe(id)
+      this.provider.unsubscribe(sub.id)
       this.subscriptions.delete(id)
       return
     } catch (err) {
       return Promise.reject(err)
     }
   }
+  async clear (cleanNode) {
+    try {
+      let q = []
+      this.subscriptions.forEach(sub => {
+        q.push(this.remove(sub.id))
+      })
+      let res = await Promise.all(q)
+      if (cleanNode) await this.removeAllNodeFilters()
+      return res
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
+
+  async removeAllNodeFilters () {
+    try {
+      let filter = await this.filter(Object.keys(filters)[0])
+      let id = parseInt(filter.id)
+      let payload = new Array(id + 1).fill().map((v, i) => this.rpc.toPayload('eth_uninstallFilter', '0x' + Number(i + 1).toString(16)))
+      filter.delete()
+      let res = await this.rpc.send(payload)
+      return res
+    } catch (err) {
+      return Promise.reject(err)
+    }
+  }
+
   list () {
     return [...this.subscriptions.keys()]
   }
-
 }
 
-function addSubscription (subscription, payload, cb) {
-  let id = subscription.id
-  this.provider.subscribe(id, payload, (err, res) => subscription.emit(err, res, cb))
+function addSubscription (id, type, payload, cb) {
+  let subscription = new Subscription(id, type)
+  subscription.delete = () => this.remove(id)
+  this.provider.subscribe(id, payload,
+    (err, res) => subscription.emit(err, res, cb))
   this.subscriptions.set(id, subscription)
   return subscription
 }
 
-function methodId () {
+function methodId (key) {
   this.sid++
-  return `${SUBSCRIPTIONS.METHOD}_${this.sid}`
+  return `${key}_${this.sid}`
 }
 
 export default Subscribe
