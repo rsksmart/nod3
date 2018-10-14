@@ -22,9 +22,7 @@ export class Nod3 {
   }
 
   isConnected () {
-    return this.rpc.sendMethod('net_listening')
-      .then(res => res === true)
-      .catch(() => false)
+    return this.provider.isConnected()
   }
 
   async batchRequest (commands, methodName) {
@@ -53,6 +51,7 @@ export class Nod3 {
     ({ method, params, formatter } = payload)
     return this.rpc.sendMethod(method, params)
       .then(res => format(res, formatter))
+      .catch(() => { console.log('ERROR') })
   }
 }
 
