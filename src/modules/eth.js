@@ -7,7 +7,7 @@ export default {
     let hOn = isHashOrNuber(hashOrNumber)
 
     if (hOn.hash) method = 'eth_getBlockByHash'
-    else hashOrNumber = hOn.number
+    else hashOrNumber = hOn.number || hashOrNumber
 
     let params = [hashOrNumber, txs]
     return { method, params, formatter: blockFormatter }
