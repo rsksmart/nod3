@@ -23,7 +23,7 @@ export class Subscribe {
       if (!id) throw new Error('Node returns invalid id')
       let payload = this.rpc.toPayload('eth_getFilterChanges', [id])
       let cb = filterDef.cb
-      return addSubscription.bind(this)(id, SUBSCRIPTIONS.FILTER, payload, cb)
+      return addSubscription.bind(this)(id, SUBSCRIPTIONS.FILTER, payload, { cb })
     } catch (err) {
       return Promise.reject(err)
     }
@@ -42,7 +42,7 @@ export class Subscribe {
       let payload = this.rpc.toPayload(m.method, m.params)
       let type = SUBSCRIPTIONS.METHOD
       let id = methodId.bind(this)(type)
-      return addSubscription.bind(this)(id, type, payload, null, m)
+      return addSubscription.bind(this)(id, type, payload, { formatter: m.formatter })
     } catch (err) {
       return Promise.reject(err)
     }
@@ -87,7 +87,7 @@ export class Subscribe {
       let res = await this.rpc.send(payload)
       return res
     } catch (err) {
-      return Promise.reject(err)
+      // hide this errors
     }
   }
 
@@ -96,11 +96,11 @@ export class Subscribe {
   }
 }
 
-function addSubscription (id, type, payload, cb, options) {
+function addSubscription (id, type, payload, options = {}) {
   let subscription = new Subscription(id, type)
   subscription.delete = () => this.remove(id)
   this.provider.subscribe(id, payload,
-    (err, res) => subscription.emit(err, res, cb, options))
+    (err, res) => subscription.emit(err, res, options))
   this.subscriptions.set(id, subscription)
   return subscription
 }
