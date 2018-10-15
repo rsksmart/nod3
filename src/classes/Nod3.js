@@ -51,7 +51,6 @@ export class Nod3 {
     ({ method, params, formatter } = payload)
     return this.rpc.sendMethod(method, params)
       .then(res => format(res, formatter))
-      .catch(() => { console.log('ERROR') })
   }
 }
 
