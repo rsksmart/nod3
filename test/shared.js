@@ -14,6 +14,7 @@ export const testNod3 = (nod3, options) => {
   let params = [...new Array(10)].map(a => [Math.floor(Math.random() * 600000), false])
   let total = params.length
 
+
   describe(`batch request: getBlock [${total}]`, () => {
     describe(`# by NUMBER `, () => {
 
