@@ -39,7 +39,7 @@ filtersTests.forEach(f => {
   describe(`waiting for ${filterName} results`, function () {
     it('sould be a valid result', function (done) {
       this.timeout(60000)
-      nbFilter.on('data', data => {
+      nbFilter.watch(data => {
         console.log(data)
         expect(data).to.satisfy(validator)
         done()
@@ -60,7 +60,6 @@ filtersTests.forEach(f => {
   })
 })
 
-
 let sub
 
 describe('subscribe to method eth.syncing', () => {
@@ -74,7 +73,7 @@ describe('subscribe to method eth.syncing', () => {
 describe('waiting subscription events', function () {
   it('sould be a valid method event', function (done) {
     this.timeout(60000)
-    sub.on('data', data => {
+    sub.watch(data => {
       console.log(data)
       expect(data).to.satisfy(function (data) {
         return data === true || data === false || typeof data === 'object'
