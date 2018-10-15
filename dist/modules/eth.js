@@ -7,7 +7,7 @@ var _utils = require('../lib/utils');exports.default =
     let hOn = (0, _utils.isHashOrNuber)(hashOrNumber);
 
     if (hOn.hash) method = 'eth_getBlockByHash';else
-    hashOrNumber = hOn.number;
+    hashOrNumber = hOn.number !== null ? hOn.number : hashOrNumber;
 
     let params = [hashOrNumber, txs];
     return { method, params, formatter: _formatters.blockFormatter };
@@ -45,7 +45,7 @@ var _utils = require('../lib/utils');exports.default =
   },
 
   syncing() {
-    return { method: 'eth_syncing' };
+    return { method: 'eth_syncing', formatter: _formatters.syncFormatter };
   },
 
   blockNumber() {

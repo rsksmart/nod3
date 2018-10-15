@@ -23,7 +23,7 @@ class Subscribe {
       if (!id) throw new Error('Node returns invalid id');
       let payload = this.rpc.toPayload('eth_getFilterChanges', [id]);
       let cb = filterDef.cb;
-      return addSubscription.bind(this)(id, _types.SUBSCRIPTIONS.FILTER, payload, cb);
+      return addSubscription.bind(this)(id, _types.SUBSCRIPTIONS.FILTER, payload, { cb });
     } catch (err) {
       return Promise.reject(err);
     }
@@ -37,12 +37,12 @@ class Subscribe {
       if (!module || module._type !== _types.NOD3_MODULE) throw new Error(`Unknown module: ${name[0]}`);
       let method = module[name[1]];
       if (!method) throw new Error(`Unknown method ${name[1]} in module ${name[0]}`);
-      args.push(this.nod3.isBatch());
+      args.push(this.nod3.BATCH_KEY);
       let m = method(...args);
       let payload = this.rpc.toPayload(m.method, m.params);
       let type = _types.SUBSCRIPTIONS.METHOD;
       let id = methodId.bind(this)(type);
-      return addSubscription.bind(this)(id, type, payload);
+      return addSubscription.bind(this)(id, type, payload, { formatter: m.formatter });
     } catch (err) {
       return Promise.reject(err);
     }
@@ -81,12 +81,13 @@ class Subscribe {
     try {
       let filter = await this.filter(Object.keys(_filters2.default)[0]);
       let id = parseInt(filter.id);
-      let payload = new Array(id + 1).fill().map((v, i) => this.rpc.toPayload('eth_uninstallFilter', '0x' + Number(i + 1).toString(16)));
+      let payload = new Array(id + 1).fill().
+      map((v, i) => this.rpc.toPayload('eth_uninstallFilter', '0x' + Number(i + 1).toString(16)));
       filter.delete();
       let res = await this.rpc.send(payload);
       return res;
     } catch (err) {
-      return Promise.reject(err);
+      // hide this errors
     }
   }
 
@@ -95,11 +96,11 @@ class Subscribe {
   }}exports.Subscribe = Subscribe;
 
 
-function addSubscription(id, type, payload, cb) {
+function addSubscription(id, type, payload, options = {}) {
   let subscription = new _Subscription.Subscription(id, type);
   subscription.delete = () => this.remove(id);
   this.provider.subscribe(id, payload,
-  (err, res) => subscription.emit(err, res, cb));
+  (err, res) => subscription.emit(err, res, options));
   this.subscriptions.set(id, subscription);
   return subscription;
 }

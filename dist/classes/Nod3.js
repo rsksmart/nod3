@@ -6,14 +6,15 @@ var _Subscribe = require('../classes/Subscribe');
 var _HttpProvider = require('../classes/HttpProvider');
 var _types = require('../lib/types');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}
 
-const IS_BATCH = 'isBatch' + Math.random();
-const isBatch = key => key ? key === IS_BATCH : IS_BATCH;
+const BATCH_KEY = 'isBatch' + Math.random();
+const isBatch = key => key === BATCH_KEY;
 
 class Nod3 {
   constructor(provider) {
     this.provider = provider;
     this.rpc = provider.rpc;
     this.isBatch = isBatch;
+    this.BATCH_KEY = BATCH_KEY;
     this.utils = utils;
     this.eth = addModule(_eth2.default, this);
     this.rsk = addModule(_rsk2.default, this);
@@ -22,9 +23,7 @@ class Nod3 {
   }
 
   isConnected() {
-    return this.rpc.sendMethod('net_listening').
-    then(res => res === true).
-    catch(() => false);
+    return this.provider.isConnected();
   }
 
   async batchRequest(commands, methodName) {
@@ -38,7 +37,7 @@ class Nod3 {
 
         let ctx = mName[1] ? this[mName[0]] : this;
         let method = ctx[mName.pop()];
-        return method(...params, isBatch());
+        return method(...params, this.BATCH_KEY);
       });
       let payload = batch.map(b => this.rpc.toPayload(b.method, b.params));
       let data = await this.rpc.send(payload);

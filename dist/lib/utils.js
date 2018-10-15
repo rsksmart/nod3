@@ -12,7 +12,7 @@ const isBlockHash = exports.isBlockHash = value => checkBlockHash(value) !== nul
 const isHashOrNuber = exports.isHashOrNuber = (hashOrNumber, toHex = true) => {
   let hash = isBlockHash(hashOrNumber) ? hashOrNumber : null;
   let number = !isNaN(parseInt(hashOrNumber)) && !hash ? hashOrNumber : null;
-  number = number && toHex ? toHexStr(hashOrNumber) : number;
+  number = number !== null && toHex ? toHexStr(hashOrNumber) : number;
   return { hash, number };
 };
 

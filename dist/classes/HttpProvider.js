@@ -5,6 +5,15 @@ class HttpProvider extends _Provider.Provider {
   constructor(options = {}) {
     super(options.url);
   }
+
+  isConnected() {
+    return this.rpc.sendMethod('net_listening').
+    then(res => res === true).
+    catch(() => {
+      return false;
+    });
+  }
+
   async send(payload) {
     try {
       let url = this.url;

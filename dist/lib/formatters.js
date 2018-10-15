@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });const formatKey = exports.formatKey = (obj, key, formatter) => {
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });const formatKey = exports.formatKey = (obj, key, formatter) => {
   if (!obj) return obj;
   let value = obj[key];
   if (undefined !== value) {
@@ -22,4 +22,15 @@ const blockFormatter = exports.blockFormatter = block => {
   return format(block, {
     number: toDecimal });
 
+};
+
+const syncFormatter = exports.syncFormatter = value => {
+  if (typeof value === 'object') {
+    return format(value, {
+      startingBlock: toDecimal,
+      currentBlock: toDecimal,
+      highestBlock: toDecimal });
+
+  }
+  return value;
 };

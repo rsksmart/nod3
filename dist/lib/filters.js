@@ -17,7 +17,9 @@ function defaultCb(err, data) {
   // return error to original handler
   if (err) return this.emit(err);
   // emit data if not empty
-  if (data && data.length) {
-    data.forEach(d => this.emit(null, d));
+  if (Array.isArray(data) && data.length > 0) {
+    data.forEach(d => {
+      this.emit(null, d);
+    });
   }
 }
