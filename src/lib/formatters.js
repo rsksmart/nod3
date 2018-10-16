@@ -23,3 +23,14 @@ export const blockFormatter = block => {
     number: toDecimal
   })
 }
+
+export const syncFormatter = value => {
+  if (typeof value === 'object') {
+    return (format(value, {
+      startingBlock: toDecimal,
+      currentBlock: toDecimal,
+      highestBlock: toDecimal
+    }))
+  }
+  return value
+}

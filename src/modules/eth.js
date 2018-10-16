@@ -1,4 +1,4 @@
-import { blockFormatter } from '../lib/formatters'
+import { blockFormatter, syncFormatter } from '../lib/formatters'
 import { isHashOrNuber, toHexStr } from '../lib/utils'
 
 export default {
@@ -45,7 +45,7 @@ export default {
   },
 
   syncing () {
-    return { method: 'eth_syncing' }
+    return { method: 'eth_syncing', formatter: syncFormatter }
   },
 
   blockNumber () {
