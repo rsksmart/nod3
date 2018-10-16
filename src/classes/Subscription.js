@@ -14,8 +14,10 @@ export class Subscription extends EventEmitter {
     let formatter = options.formatter
     if (formatter) data = formatter(data)
     if (cb) return cb.bind(this)(err, data)
-    if (err) return super.emit('error', err)
-    if (data !== undefined) return super.emit('data', data)
+    else {
+      if (err) return super.emit('error', err)
+      if (data !== undefined) return super.emit('data', data)
+    }
   }
   delete () {
     throw new Error(`Method delete is not implemented on: ${this.id}`)
