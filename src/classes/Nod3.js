@@ -6,14 +6,15 @@ import { Subscribe } from '../classes/Subscribe'
 import { HttpProvider } from '../classes/HttpProvider'
 import { NOD3_MODULE } from '../lib/types'
 
-const IS_BATCH = 'isBatch' + Math.random()
-const isBatch = (key) => (key) ? key === IS_BATCH : IS_BATCH
+const BATCH_KEY = 'isBatch' + Math.random()
+const isBatch = key => key === BATCH_KEY
 
 export class Nod3 {
   constructor (provider) {
     this.provider = provider
     this.rpc = provider.rpc
     this.isBatch = isBatch
+    this.BATCH_KEY = BATCH_KEY
     this.utils = utils
     this.eth = addModule(eth, this)
     this.rsk = addModule(rsk, this)
@@ -36,7 +37,7 @@ export class Nod3 {
 
         let ctx = (mName[1]) ? this[mName[0]] : this
         let method = ctx[mName.pop()]
-        return method(...params, isBatch())
+        return method(...params, this.BATCH_KEY)
       })
       let payload = batch.map(b => this.rpc.toPayload(b.method, b.params))
       let data = await this.rpc.send(payload)

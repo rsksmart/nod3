@@ -37,7 +37,7 @@ export class Subscribe {
       if (!module || module._type !== NOD3_MODULE) throw new Error(`Unknown module: ${name[0]}`)
       let method = module[name[1]]
       if (!method) throw new Error(`Unknown method ${name[1]} in module ${name[0]}`)
-      args.push(this.nod3.isBatch())
+      args.push(this.nod3.BATCH_KEY)
       let m = method(...args)
       let payload = this.rpc.toPayload(m.method, m.params)
       let type = SUBSCRIPTIONS.METHOD
@@ -81,7 +81,8 @@ export class Subscribe {
     try {
       let filter = await this.filter(Object.keys(filters)[0])
       let id = parseInt(filter.id)
-      let payload = new Array(id + 1).fill().map((v, i) => this.rpc.toPayload('eth_uninstallFilter', '0x' + Number(i + 1).toString(16)))
+      let payload = new Array(id + 1).fill()
+        .map((v, i) => this.rpc.toPayload('eth_uninstallFilter', '0x' + Number(i + 1).toString(16)))
       filter.delete()
       let res = await this.rpc.send(payload)
       return res
