@@ -42,7 +42,7 @@ export class Subscribe {
       let payload = this.rpc.toPayload(m.method, m.params)
       let type = SUBSCRIPTIONS.METHOD
       let id = methodId.bind(this)(type)
-      return addSubscription.bind(this)(id, type, payload)
+      return addSubscription.bind(this)(id, type, payload, null, m)
     } catch (err) {
       return Promise.reject(err)
     }
@@ -95,11 +95,11 @@ export class Subscribe {
   }
 }
 
-function addSubscription (id, type, payload, cb) {
+function addSubscription (id, type, payload, cb, options) {
   let subscription = new Subscription(id, type)
   subscription.delete = () => this.remove(id)
   this.provider.subscribe(id, payload,
-    (err, res) => subscription.emit(err, res, cb))
+    (err, res) => subscription.emit(err, res, cb, options))
   this.subscriptions.set(id, subscription)
   return subscription
 }

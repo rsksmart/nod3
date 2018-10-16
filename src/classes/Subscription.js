@@ -10,7 +10,9 @@ export class Subscription extends EventEmitter {
     this.id = id
     this.type = type
   }
-  emit (err, data, cb) {
+  emit (err, data, cb, options = {}) {
+    let formatter = options.formatter
+    if (formatter) data = formatter(data)
     if (cb) return cb.bind(this)(err, data)
     if (err) return super.emit('error', err)
     if (data !== undefined) return super.emit('data', data)
