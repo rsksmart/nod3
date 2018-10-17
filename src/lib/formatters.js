@@ -1,3 +1,5 @@
+import { toDecimal } from './utils'
+
 export const formatKey = (obj, key, formatter) => {
   if (!obj) return obj
   let value = obj[key]
@@ -14,23 +16,53 @@ export const format = (obj, formats) => {
   return obj
 }
 
-export const toDecimal = value => {
-  return parseInt(Number(value).toString(10))
+const addDefaultFields = (fields) => {
+  let def = {
+    transactionIndex: toDecimal,
+    blockNumber: toDecimal,
+    timestamp: toDecimal,
+    gas: toDecimal,
+    gasUsed: toDecimal
+  }
+  return Object.assign(def, fields)
 }
 
 export const blockFormatter = block => {
   return format(block, {
-    number: toDecimal
+    number: toDecimal,
+    timestamp: toDecimal,
+    size: toDecimal,
+    gasUsed: toDecimal,
+    gasLimit: toDecimal
   })
 }
 
-export const syncFormatter = value => {
-  if (typeof value === 'object') {
-    return (format(value, {
+export const syncFormatter = sync => {
+  if (typeof sync === 'object') {
+    return format(sync, {
       startingBlock: toDecimal,
       currentBlock: toDecimal,
       highestBlock: toDecimal
-    }))
+    })
   }
-  return value
+  return sync
+}
+
+export const txFormatter = tx => {
+  return format(tx, addDefaultFields({
+    nonce: toDecimal
+  }))
+}
+
+export const txReceiptFormatter = receipt => {
+  receipt.logs = receipt.logs.map(log => logFormatter(log))
+  return format(receipt, addDefaultFields({
+    cumulativeGasUsed: toDecimal
+  }))
+}
+
+export const logFormatter = log => {
+  return format(log, addDefaultFields({
+    logIndex: toDecimal
+  }))
 }

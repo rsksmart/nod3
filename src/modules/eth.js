@@ -1,4 +1,10 @@
-import { blockFormatter, syncFormatter } from '../lib/formatters'
+import {
+  blockFormatter,
+  syncFormatter,
+  txFormatter,
+  txReceiptFormatter
+} from '../lib/formatters'
+
 import { isHashOrNuber, toHexStr } from '../lib/utils'
 
 export default {
@@ -19,19 +25,19 @@ export default {
     let method = (hOn.hash) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex'
     index = toHexStr(index)
     params.push(index)
-    return { method, params }
+    return { method, params, formatter: txFormatter }
   },
 
   getTransactionByHash (hash) {
     let params = [hash]
     let method = 'eth_getTransactionByHash'
-    return { method, params }
+    return { method, params, formatter: txFormatter }
   },
 
   getTransactionReceipt (hash) {
     let method = 'eth_getTransactionReceipt'
     let params = [hash]
-    return { method, params }
+    return { method, params, formatter: txReceiptFormatter }
   },
 
   getBalance (address, block = 'latest') {
