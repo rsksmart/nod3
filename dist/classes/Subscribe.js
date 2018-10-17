@@ -100,7 +100,7 @@ function addSubscription(id, type, payload, options = {}) {
   let subscription = new _Subscription.Subscription(id, type);
   subscription.delete = () => this.remove(id);
   this.provider.subscribe(id, payload,
-  (err, res) => subscription.emit(err, res, options));
+  (err, res) => subscription.send(err, res, options));
   this.subscriptions.set(id, subscription);
   return subscription;
 }

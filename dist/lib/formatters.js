@@ -1,4 +1,6 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });const formatKey = exports.formatKey = (obj, key, formatter) => {
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.logFormatter = exports.txReceiptFormatter = exports.txFormatter = exports.syncFormatter = exports.blockFormatter = exports.format = exports.formatKey = undefined;var _utils = require('./utils');
+
+const formatKey = exports.formatKey = (obj, key, formatter) => {
   if (!obj) return obj;
   let value = obj[key];
   if (undefined !== value) {
@@ -14,23 +16,53 @@ const format = exports.format = (obj, formats) => {
   return obj;
 };
 
-const toDecimal = exports.toDecimal = value => {
-  return parseInt(Number(value).toString(10));
+const addDefaultFields = fields => {
+  let def = {
+    transactionIndex: _utils.toDecimal,
+    blockNumber: _utils.toDecimal,
+    timestamp: _utils.toDecimal,
+    gas: _utils.toDecimal,
+    gasUsed: _utils.toDecimal };
+
+  return Object.assign(def, fields);
 };
 
 const blockFormatter = exports.blockFormatter = block => {
   return format(block, {
-    number: toDecimal });
+    number: _utils.toDecimal,
+    timestamp: _utils.toDecimal,
+    size: _utils.toDecimal,
+    gasUsed: _utils.toDecimal,
+    gasLimit: _utils.toDecimal });
 
 };
 
-const syncFormatter = exports.syncFormatter = value => {
-  if (typeof value === 'object') {
-    return format(value, {
-      startingBlock: toDecimal,
-      currentBlock: toDecimal,
-      highestBlock: toDecimal });
+const syncFormatter = exports.syncFormatter = sync => {
+  if (typeof sync === 'object') {
+    return format(sync, {
+      startingBlock: _utils.toDecimal,
+      currentBlock: _utils.toDecimal,
+      highestBlock: _utils.toDecimal });
 
   }
-  return value;
+  return sync;
+};
+
+const txFormatter = exports.txFormatter = tx => {
+  return format(tx, addDefaultFields({
+    nonce: _utils.toDecimal }));
+
+};
+
+const txReceiptFormatter = exports.txReceiptFormatter = receipt => {
+  receipt.logs = receipt.logs.map(log => logFormatter(log));
+  return format(receipt, addDefaultFields({
+    cumulativeGasUsed: _utils.toDecimal }));
+
+};
+
+const logFormatter = exports.logFormatter = log => {
+  return format(log, addDefaultFields({
+    logIndex: _utils.toDecimal }));
+
 };

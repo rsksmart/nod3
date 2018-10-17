@@ -10,9 +10,10 @@ const BATCH_KEY = 'isBatch' + Math.random();
 const isBatch = key => key === BATCH_KEY;
 
 class Nod3 {
-  constructor(provider) {
+  constructor(provider, options = {}) {
     this.provider = provider;
     this.rpc = provider.rpc;
+    this.log = options.logger || function (err) {console.log(err);};
     this.isBatch = isBatch;
     this.BATCH_KEY = BATCH_KEY;
     this.utils = utils;
@@ -48,10 +49,10 @@ class Nod3 {
   }
 
   static send(payload) {
-    let method, params, formatter;
-    ({ method, params, formatter } = payload);
+    let { method, params, formatter } = payload;
     return this.rpc.sendMethod(method, params).
-    then(res => format(res, formatter));
+    then(res => format(res, formatter)).
+    catch(err => this.log(err));
   }}exports.Nod3 = Nod3;
 
 

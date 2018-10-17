@@ -1,4 +1,10 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _formatters = require('../lib/formatters');
+
+
+
+
+
+
 var _utils = require('../lib/utils');exports.default =
 
 {
@@ -19,19 +25,19 @@ var _utils = require('../lib/utils');exports.default =
     let method = hOn.hash ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
     index = (0, _utils.toHexStr)(index);
     params.push(index);
-    return { method, params };
+    return { method, params, formatter: _formatters.txFormatter };
   },
 
   getTransactionByHash(hash) {
     let params = [hash];
     let method = 'eth_getTransactionByHash';
-    return { method, params };
+    return { method, params, formatter: _formatters.txFormatter };
   },
 
   getTransactionReceipt(hash) {
     let method = 'eth_getTransactionReceipt';
     let params = [hash];
-    return { method, params };
+    return { method, params, formatter: _formatters.txReceiptFormatter };
   },
 
   getBalance(address, block = 'latest') {
