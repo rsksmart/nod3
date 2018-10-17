@@ -1,10 +1,10 @@
 import { JsonRpc } from './JsonRpc'
 export class Provider {
-  constructor (url) {
+  constructor (url, options = {}) {
     this.url = url || 'http://localhost:4444'
     this.rpc = new JsonRpc(this)
-    this.interval = null
-    this.intervalTime = 5000
+    this.poolTime = options.poolTime || 5000
+    this.nextPool = null
     this.pool = new Map()
   }
   send () {
@@ -17,34 +17,35 @@ export class Provider {
     if (!id || !payload || !cb) throw new Error('Missing Arguments')
     if (typeof cb !== 'function') throw new Error('cb must be a function')
     this.pool.set(id, { payload, cb })
-    this.startPool()
+    this.processPool()
   }
 
   unsubscribe (id) {
     this.pool.delete(id)
-    this.proveInterval()
+    this.checkPool()
   }
 
-  proveInterval () {
-    if (this.interval && !this.pool.size) {
-      clearInterval(this.interval)
-      this.interval = null
+  checkPool () {
+    if (this.pool.size && !this.nextPool) {
+      this.nextPool = setTimeout(() => { this.processPool() }, this.poolTime)
     }
   }
 
-  processPool () {
-    this.proveInterval()
-    this.pool.forEach((sub, id) => {
-      let { cb, payload } = sub
-      this.rpc.send(payload)
-        .then(data => cb(null, data))
-        .catch(err => cb(err))
-    })
-  }
-
-  startPool () {
-    if (!this.interval && this.pool.size) {
-      this.interval = setInterval(() => { this.processPool() }, this.intervalTime)
+  async processPool () {
+    this.nextPool = null
+    try {
+      let q = []
+      this.pool.forEach((sub, id) => {
+        let { cb, payload } = sub
+        q.push(this.rpc.send(payload)
+          .then(data => cb(null, data))
+          .catch(err => cb(err)))
+      })
+      await Promise.all(q)
+      this.checkPool()
+    } catch (err) {
+      console.log(err.Error)
+      this.checkPool()
     }
   }
 }
