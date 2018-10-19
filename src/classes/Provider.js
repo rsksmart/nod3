@@ -3,7 +3,7 @@ export class Provider {
   constructor (url, options = {}) {
     this.url = url || 'http://localhost:4444'
     this.rpc = new JsonRpc(this)
-    this.poolTime = options.poolTime || 5000
+    this.poolTime = options.poolTime || 1000 / 2
     this.nextPool = null
     this.pool = new Map()
   }
