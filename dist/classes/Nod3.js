@@ -2,6 +2,7 @@
 var _eth = require('../modules/eth');var _eth2 = _interopRequireDefault(_eth);
 var _rsk = require('../modules/rsk');var _rsk2 = _interopRequireDefault(_rsk);
 var _net = require('../modules/net');var _net2 = _interopRequireDefault(_net);
+var _txpool = require('../modules/txpool');var _txpool2 = _interopRequireDefault(_txpool);
 var _Subscribe = require('../classes/Subscribe');
 var _HttpProvider = require('../classes/HttpProvider');
 var _types = require('../lib/types');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];}}newObj.default = obj;return newObj;}}
@@ -20,6 +21,7 @@ class Nod3 {
     this.eth = addModule(_eth2.default, this);
     this.rsk = addModule(_rsk2.default, this);
     this.net = addModule(_net2.default, this);
+    this.txpool = addModule(_txpool2.default, this);
     this.subscribe = new _Subscribe.Subscribe(this);
   }
 
