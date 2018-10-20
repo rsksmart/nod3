@@ -2,6 +2,7 @@ import * as utils from '../lib/utils'
 import eth from '../modules/eth'
 import rsk from '../modules/rsk'
 import net from '../modules/net'
+import txpool from '../modules/txpool'
 import { Subscribe } from '../classes/Subscribe'
 import { HttpProvider } from '../classes/HttpProvider'
 import { NOD3_MODULE } from '../lib/types'
@@ -20,6 +21,7 @@ export class Nod3 {
     this.eth = addModule(eth, this)
     this.rsk = addModule(rsk, this)
     this.net = addModule(net, this)
+    this.txpool = addModule(txpool, this)
     this.subscribe = new Subscribe(this)
   }
 
