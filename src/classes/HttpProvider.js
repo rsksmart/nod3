@@ -6,12 +6,13 @@ export class HttpProvider extends Provider {
     super(options.url)
   }
 
-  isConnected () {
-    return this.rpc.sendMethod('net_listening')
-      .then(res => res === true)
-      .catch(() => {
-        return false
-      })
+  async isConnected () {
+    try {
+      let connected = await this.rpc.sendMethod('net_listening')
+      return connected === true
+    } catch (err) {
+      return Promise.reject(err)
+    }
   }
 
   async send (payload) {
