@@ -76,6 +76,7 @@ function addModule (mod, nod3) {
           let aLen = args.length
           // batch request
           if (fn.length < aLen && isBatch(args[aLen - 1])) {
+            args.pop()
             return fn(...args)
           }
           // single execution
