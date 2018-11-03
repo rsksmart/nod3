@@ -13,4 +13,6 @@
   } };
 
 
-const txPoolFormatter = exports.txPoolFormatter = result => JSON.parse(result);
+// fix bad rskj response
+// see: https://github.com/rsksmart/rskj/issues/689
+const txPoolFormatter = exports.txPoolFormatter = result => typeof result === 'string' ? JSON.parse(result) : result;

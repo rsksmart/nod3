@@ -55,7 +55,7 @@ var _utils = require('../lib/utils');exports.default =
   },
 
   blockNumber() {
-    return { method: 'eth_blockNumber' };
+    return { method: 'eth_blockNumber', formatter: _utils.toDecimal };
   } };
 
 
