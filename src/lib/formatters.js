@@ -55,10 +55,13 @@ export const txFormatter = tx => {
 }
 
 export const txReceiptFormatter = receipt => {
-  receipt.logs = receipt.logs.map(log => logFormatter(log))
-  return format(receipt, addDefaultFields({
-    cumulativeGasUsed: toDecimal
-  }))
+  if (receipt && receipt.logs) {
+    receipt.logs = receipt.logs.map(log => logFormatter(log))
+    return format(receipt, addDefaultFields({
+      cumulativeGasUsed: toDecimal
+    }))
+  }
+  return receipt
 }
 
 export const logFormatter = log => {
