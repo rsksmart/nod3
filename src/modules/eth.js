@@ -5,7 +5,7 @@ import {
   txReceiptFormatter
 } from '../lib/formatters'
 
-import { isHashOrNuber, toHexStr } from '../lib/utils'
+import { isHashOrNuber, toHexStr, toDecimal } from '../lib/utils'
 
 export default {
   getBlock (hashOrNumber, txs = false) {
@@ -55,7 +55,7 @@ export default {
   },
 
   blockNumber () {
-    return { method: 'eth_blockNumber' }
+    return { method: 'eth_blockNumber', formatter: toDecimal }
   }
 }
 
