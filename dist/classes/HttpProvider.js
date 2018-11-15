@@ -2,8 +2,8 @@
 var _Provider = require('./Provider');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 class HttpProvider extends _Provider.Provider {
-  constructor(options = {}) {
-    super(options.url);
+  constructor(url, options = {}) {
+    super(url, options);
   }
 
   async isConnected() {
