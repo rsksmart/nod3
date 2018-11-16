@@ -2,8 +2,8 @@ import axios from 'axios'
 import { Provider } from './Provider'
 
 export class HttpProvider extends Provider {
-  constructor (options = {}) {
-    super(options.url)
+  constructor (url, options = {}) {
+    super(url, options)
   }
 
   async isConnected () {
