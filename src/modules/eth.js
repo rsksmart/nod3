@@ -40,6 +40,11 @@ export default {
     return { method, params, formatter: txReceiptFormatter }
   },
 
+  getTransactionCount (address, block = 'latest') {
+    block = parseBlockArg(block)
+    return { method: 'eth_getTransactionCount', params: [address, block] }
+  },
+
   getBalance (address, block = 'latest') {
     block = parseBlockArg(block)
     return { method: 'eth_getBalance', params: [address] }
