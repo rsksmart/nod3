@@ -61,7 +61,12 @@ export default {
 
   blockNumber () {
     return { method: 'eth_blockNumber', formatter: toDecimal }
+  },
+
+  sendRawTransaction (txData) {
+    return { method: 'eth_sendRawTransaction', params: [txData] }
   }
+
 }
 
 function parseBlockArg (block) {
