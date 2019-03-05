@@ -47,7 +47,7 @@ export default {
 
   getBalance (address, block = 'latest') {
     block = parseBlockArg(block)
-    return { method: 'eth_getBalance', params: [address] }
+    return { method: 'eth_getBalance', params: [address, block] }
   },
 
   getCode (address, block = 'latest') {
