@@ -10,14 +10,11 @@ export const nod3Creator = () => {
 
 export const testNod3 = (nod3, options) => {
   let blockNumber = options.blockNumber
-
-  let params = [...new Array(10)].map(a => [Math.floor(Math.random() * 600000), false])
+  let params = [...new Array(10)].map(a => [Math.floor(Math.random() * blockNumber), false])
   let total = params.length
-
 
   describe(`batch request: getBlock [${total}]`, () => {
     describe(`# by NUMBER `, () => {
-
       it(`should be return an array of ${total} values`, async () => {
         let data = await nod3.batchRequest(params, 'eth.getBlock')
         expect(data).to.be.an('array')
@@ -32,7 +29,6 @@ export const testNod3 = (nod3, options) => {
         params = new Set()
         data.forEach(block => {
           params.add(block.parentHash)
-          return block.uncles.forEach(u => params.add(u))
         })
         params = [...params].slice(0, total).map(h => [h, false])
 
@@ -49,10 +45,6 @@ export const testNod3 = (nod3, options) => {
       })
     })
   })
-  describe(`Mixed methods Batch request`, () => {
-
-  })
-
 }
 
 export const testBlock = block => {

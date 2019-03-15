@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { checkConection } from './checkConnection'
 import { nod3Creator, testNod3 } from './shared'
 
-let blockNumber = global.blockNumber
+let blockNumber = 365678
 let nod3 = global.nod3 || nod3Creator()
 let conn
 

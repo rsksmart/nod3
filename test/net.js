@@ -1,6 +1,7 @@
 
+import { nod3Creator } from './shared'
 import { expect } from 'chai'
-let nod3 = global.nod3
+const nod3 = global.nod3 || nod3Creator()
 
 describe('NET', () => {
   let net
