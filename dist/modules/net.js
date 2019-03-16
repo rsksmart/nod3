@@ -11,5 +11,5 @@
     return { method: 'net_version', formatter };
   },
   peerCount() {
-    return { method: 'net_peerCount' };
+    return { method: 'net_peerCount', formatter: value => (0, _utils.toDecimal)(value) };
   } };

@@ -28,13 +28,15 @@ const addDefaultFields = fields => {
 };
 
 const blockFormatter = exports.blockFormatter = block => {
-  return format(block, {
+  block = format(block, {
     number: _utils.toDecimal,
     timestamp: _utils.toDecimal,
     size: _utils.toDecimal,
     gasUsed: _utils.toDecimal,
     gasLimit: _utils.toDecimal });
 
+  block.transactions = block.transactions.map(tx => txFormatter(tx));
+  return block;
 };
 
 const syncFormatter = exports.syncFormatter = sync => {

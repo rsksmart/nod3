@@ -40,9 +40,14 @@ var _utils = require('../lib/utils');exports.default =
     return { method, params, formatter: _formatters.txReceiptFormatter };
   },
 
+  getTransactionCount(address, block = 'latest') {
+    block = parseBlockArg(block);
+    return { method: 'eth_getTransactionCount', params: [address, block] };
+  },
+
   getBalance(address, block = 'latest') {
     block = parseBlockArg(block);
-    return { method: 'eth_getBalance', params: [address] };
+    return { method: 'eth_getBalance', params: [address, block] };
   },
 
   getCode(address, block = 'latest') {
@@ -56,7 +61,12 @@ var _utils = require('../lib/utils');exports.default =
 
   blockNumber() {
     return { method: 'eth_blockNumber', formatter: _utils.toDecimal };
+  },
+
+  sendRawTransaction(txData) {
+    return { method: 'eth_sendRawTransaction', params: [txData] };
   } };
+
 
 
 function parseBlockArg(block) {

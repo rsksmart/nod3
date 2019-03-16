@@ -34,8 +34,7 @@ class Nod3 {
       let batch = commands.map(c => {
         let mName = methodName || c[0];
         mName = mName.split('.');
-        let params = methodName ? [c] : c.slice(1);
-
+        let params = methodName ? c : c.slice(1);
         if (mName.length > 2) throw new Error(`Invalid method ${c[0]}`);
 
         let ctx = mName[1] ? this[mName[0]] : this;
