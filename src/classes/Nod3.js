@@ -43,22 +43,26 @@ export class Nod3 {
       })
       let payload = batch.map(b => this.rpc.toPayload(b.method, b.params))
       let data = await this.rpc.send(payload)
-      return data.map((d, i) => format(d, batch[i].formatter))
+      return data.map((d, i) => format(d, batch[i].formatters))
     } catch (err) {
       return Promise.reject(err)
     }
   }
 
   static send (payload) {
-    let { method, params, formatter } = payload
+    let { method, params, formatters } = payload
     return this.rpc.sendMethod(method, params)
-      .then(res => format(res, formatter))
+      .then(res => format(res, formatters))
       .catch(err => this.log(err))
   }
 }
 
-function format (data, formatter) {
-  return (formatter) ? formatter(data) : data
+export function format (data, formatters) {
+  if (Array.isArray(formatters)) {
+    formatters = formatters.filter(f => typeof f === 'function')
+    formatters.forEach(f => { data = f(data) })
+  }
+  return data
 }
 
 function addModule (mod, nod3) {

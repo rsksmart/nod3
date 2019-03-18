@@ -1,15 +1,15 @@
 export default {
 
   content () {
-    return { method: 'txpool_content', formatter: txPoolFormatter }
+    return { method: 'txpool_content', formatters: [txPoolFormatter] }
   },
 
   inspect () {
-    return { method: 'txpool_inspect', formatter: txPoolFormatter }
+    return { method: 'txpool_inspect', formatters: [txPoolFormatter] }
   },
 
   status () {
-    return { method: 'txpool_status', formatter: txPoolFormatter }
+    return { method: 'txpool_status', formatters: [txPoolFormatter] }
   }
 }
 

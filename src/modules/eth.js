@@ -16,7 +16,7 @@ export default {
     else hashOrNumber = (hOn.number !== null) ? hOn.number : hashOrNumber
 
     let params = [hashOrNumber, txs]
-    return { method, params, formatter: blockFormatter }
+    return { method, params, formatters: [blockFormatter] }
   },
 
   getTransactionByIndex (hashOrNumber, index) {
@@ -25,19 +25,19 @@ export default {
     let method = (hOn.hash) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex'
     index = toHexStr(index)
     params.push(index)
-    return { method, params, formatter: txFormatter }
+    return { method, params, formatters: [txFormatter] }
   },
 
   getTransactionByHash (hash) {
     let params = [hash]
     let method = 'eth_getTransactionByHash'
-    return { method, params, formatter: txFormatter }
+    return { method, params, formatters: [txFormatter] }
   },
 
   getTransactionReceipt (hash) {
     let method = 'eth_getTransactionReceipt'
     let params = [hash]
-    return { method, params, formatter: txReceiptFormatter }
+    return { method, params, formatters: [txReceiptFormatter] }
   },
 
   getTransactionCount (address, block = 'latest') {
@@ -56,11 +56,11 @@ export default {
   },
 
   syncing () {
-    return { method: 'eth_syncing', formatter: syncFormatter }
+    return { method: 'eth_syncing', formatters: [syncFormatter] }
   },
 
   blockNumber () {
-    return { method: 'eth_blockNumber', formatter: toDecimal }
+    return { method: 'eth_blockNumber', formatters: [toDecimal] }
   },
 
   sendRawTransaction (txData) {

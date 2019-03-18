@@ -42,7 +42,7 @@ export class Subscribe {
       let payload = this.rpc.toPayload(m.method, m.params)
       let type = SUBSCRIPTIONS.METHOD
       let id = methodId.bind(this)(type)
-      return addSubscription.bind(this)(id, type, payload, { formatter: m.formatter })
+      return addSubscription.bind(this)(id, type, payload, { formatters: m.formatters })
     } catch (err) {
       return Promise.reject(err)
     }

@@ -4,13 +4,13 @@ export default {
     return { method: 'net_listening' }
   },
   version () {
-    let formatter = (id) => {
+    const formatVersion = (id) => {
       let name = netName(id)
       return { id, name }
     }
-    return { method: 'net_version', formatter }
+    return { method: 'net_version', formatters: [formatVersion] }
   },
   peerCount () {
-    return { method: 'net_peerCount', formatter: (value) => toDecimal(value) }
+    return { method: 'net_peerCount', formatters: [(value) => toDecimal(value)] }
   }
 }

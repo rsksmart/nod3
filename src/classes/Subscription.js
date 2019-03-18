@@ -1,4 +1,5 @@
 import { SUBSCRIPTIONS } from '../lib/types'
+import { format } from './Nod3'
 
 export class Subscription {
   constructor (id, type) {
@@ -15,9 +16,9 @@ export class Subscription {
     if (undefined !== errCb) this.errorHandler = errCb
   }
   send (err, data, options = {}) {
-    let formatter = options.formatter
+    let formatters = { options }
     let cb = options.cb
-    if (formatter && typeof formatter === 'function') data = formatter(data)
+    data = format(data, formatters)
     if (cb && typeof cb === 'function') return cb.bind(this)(err, data)
     else {
       if (err && this.errorHandler) this.errorHandler(err)
