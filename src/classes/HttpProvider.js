@@ -20,6 +20,9 @@ export class HttpProvider extends Provider {
       let url = this.url
       let headers = { 'Content-Type': 'application/json' }
       const res = await axios.post(url, payload, { headers })
+        .catch(err => { // wrap axios error
+          throw new Error(err.message)
+        })
       return res.data
     } catch (err) {
       return Promise.reject(err)
