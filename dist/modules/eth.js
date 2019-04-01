@@ -16,7 +16,7 @@ var _utils = require('../lib/utils');exports.default =
     hashOrNumber = hOn.number !== null ? hOn.number : hashOrNumber;
 
     let params = [hashOrNumber, txs];
-    return { method, params, formatter: _formatters.blockFormatter };
+    return { method, params, formatters: [_formatters.blockFormatter] };
   },
 
   getTransactionByIndex(hashOrNumber, index) {
@@ -25,19 +25,19 @@ var _utils = require('../lib/utils');exports.default =
     let method = hOn.hash ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
     index = (0, _utils.toHexStr)(index);
     params.push(index);
-    return { method, params, formatter: _formatters.txFormatter };
+    return { method, params, formatters: [_formatters.txFormatter] };
   },
 
   getTransactionByHash(hash) {
     let params = [hash];
     let method = 'eth_getTransactionByHash';
-    return { method, params, formatter: _formatters.txFormatter };
+    return { method, params, formatters: [_formatters.txFormatter] };
   },
 
   getTransactionReceipt(hash) {
     let method = 'eth_getTransactionReceipt';
     let params = [hash];
-    return { method, params, formatter: _formatters.txReceiptFormatter };
+    return { method, params, formatters: [_formatters.txReceiptFormatter] };
   },
 
   getTransactionCount(address, block = 'latest') {
@@ -56,11 +56,11 @@ var _utils = require('../lib/utils');exports.default =
   },
 
   syncing() {
-    return { method: 'eth_syncing', formatter: _formatters.syncFormatter };
+    return { method: 'eth_syncing', formatters: [_formatters.syncFormatter] };
   },
 
   blockNumber() {
-    return { method: 'eth_blockNumber', formatter: _utils.toDecimal };
+    return { method: 'eth_blockNumber', formatters: [_utils.toDecimal] };
   },
 
   sendRawTransaction(txData) {

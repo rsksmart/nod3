@@ -4,12 +4,12 @@
     return { method: 'net_listening' };
   },
   version() {
-    let formatter = id => {
+    const formatVersion = id => {
       let name = (0, _utils.netName)(id);
       return { id, name };
     };
-    return { method: 'net_version', formatter };
+    return { method: 'net_version', formatters: [formatVersion] };
   },
   peerCount() {
-    return { method: 'net_peerCount', formatter: value => (0, _utils.toDecimal)(value) };
+    return { method: 'net_peerCount', formatters: [value => (0, _utils.toDecimal)(value)] };
   } };

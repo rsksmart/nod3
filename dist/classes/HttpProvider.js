@@ -19,7 +19,10 @@ class HttpProvider extends _Provider.Provider {
     try {
       let url = this.url;
       let headers = { 'Content-Type': 'application/json' };
-      const res = await _axios2.default.post(url, payload, { headers });
+      const res = await _axios2.default.post(url, payload, { headers }).
+      catch(err => {// wrap axios error
+        throw new Error(err.message);
+      });
       return res.data;
     } catch (err) {
       return Promise.reject(err);

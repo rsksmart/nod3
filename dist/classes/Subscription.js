@@ -1,4 +1,5 @@
 'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Subscription = undefined;var _types = require('../lib/types');
+var _Nod = require('./Nod3');
 
 class Subscription {
   constructor(id, type) {
@@ -15,9 +16,9 @@ class Subscription {
     if (undefined !== errCb) this.errorHandler = errCb;
   }
   send(err, data, options = {}) {
-    let formatter = options.formatter;
+    let formatters = { options };
     let cb = options.cb;
-    if (formatter && typeof formatter === 'function') data = formatter(data);
+    data = (0, _Nod.format)(data, formatters);
     if (cb && typeof cb === 'function') return cb.bind(this)(err, data);else
     {
       if (err && this.errorHandler) this.errorHandler(err);
