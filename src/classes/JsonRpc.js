@@ -31,16 +31,24 @@ export class JsonRpc {
 
   getId () {
     this.id++
+    if (this.id > Number.MAX_SAFE_INTEGER) {
+      this.id = 0
+    }
     return this.id
   }
 
+  isValidId (id) {
+    return typeof id === 'number'
+  }
+
   isValidResponse (res) {
+    const isValidId = this.isValidId
     return Array.isArray(res) ? res.every(validate) : validate(res)
     function validate (message) {
       return !!message &&
         !message.error &&
         message.jsonrpc === '2.0' &&
-        typeof message.id === 'number' &&
+        isValidId(message.id) &&
         message.result !== undefined
     }
   }
