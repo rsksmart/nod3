@@ -22,7 +22,7 @@ describe('NET', () => {
   describe('#net_peerCount', async () => {
     it('should be a decimal number', async () => {
       let peers = await nod3.net.peerCount()
-      expect(peers).to.be.equal(parseInt(peers))
+      expect(parseInt(peers)).to.be.equal(parseInt(peers))
     })
   })
 

@@ -27,6 +27,10 @@ export const toHexStr = (value, ox = '0x') => {
 export const netName = id => NETWORKS[id]
 export const isNet = (id, name) => netName(id) === name
 
-export const toDecimal = value => {
-  return parseInt(Number(value).toString(10))
+export const toBase10 = (value, asNumber = false) => {
+  const type = typeof value
+  value = Number(value).toString(10)
+  return (type === 'number' || asNumber) ? Number(value) : value
 }
+
+export const toDecimal = value => parseInt(toBase10(value))

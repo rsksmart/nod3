@@ -51,7 +51,6 @@ export const testBlock = block => {
   describe(`Testing block ${(block) ? block.number : block}`, () => {
 
     it(`should have block properties`, () => {
-      expect(block.number).to.be.an('number')
       expect(isBlockHash(block.hash)).to.be.equal(true)
       expect(isBlockHash(block.parentHash)).to.be.equal(true)
     })
