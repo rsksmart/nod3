@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.toDecimal = exports.isNet = exports.netName = exports.toHexStr = exports.isHexStr = exports.isHashOrNuber = exports.isBlockHash = exports.checkBlockHash = undefined;var _types = require('./types');
+'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.toDecimal = exports.toBase10 = exports.isNet = exports.netName = exports.toHexStr = exports.isHexStr = exports.isHashOrNuber = exports.isBlockHash = exports.checkBlockHash = undefined;var _types = require('./types');
 
 const checkBlockHash = exports.checkBlockHash = value => {
   value = String(value).toLowerCase();
@@ -27,6 +27,10 @@ const toHexStr = exports.toHexStr = (value, ox = '0x') => {
 const netName = exports.netName = id => _types.NETWORKS[id];
 const isNet = exports.isNet = (id, name) => netName(id) === name;
 
-const toDecimal = exports.toDecimal = value => {
-  return parseInt(Number(value).toString(10));
+const toBase10 = exports.toBase10 = (value, asNumber = false) => {
+  const type = typeof value;
+  value = Number(value).toString(10);
+  return type === 'number' || asNumber ? Number(value) : value;
 };
+
+const toDecimal = exports.toDecimal = value => parseInt(toBase10(value));
