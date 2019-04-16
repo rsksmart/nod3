@@ -2,7 +2,6 @@ import { Nod3 } from '../src/'
 import { expect } from 'chai'
 import { isBlockHash } from '../src/lib/utils'
 import { getExample } from './examples'
-import { isBlockHash } from '../src/lib/utils'
 
 export const nod3Creator = () => {
   const url = process.env['url']
@@ -62,4 +61,15 @@ export const testBlock = block => {
 export const fakeRpcSendMethod = (method, params) => {
   const example = getExample(method)
   return Promise.resolve(example)
+}
+
+export const checkDecimalFields = (result, fields) => () => {
+  for (let field of fields) {
+    it(`${field} should be a decimal value`, () => {
+      const value = result[field]
+      expect(`${value}`, `${field}`).to.be.equal(`${Number(value).toString(10)}`)
+      expect(typeof value).to.be.equal('number')
+      expect(value).to.be.equal(parseInt(value))
+    })
+  }
 }

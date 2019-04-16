@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import { nod3Creator } from '../shared'
+import { validateBlock } from './block.shared'
 
 let blockNumber = global.blockNumber || Math.floor(Math.random() * 30000)
 let nod3 = global.nod3 || nod3Creator()
@@ -9,7 +10,7 @@ describe('getBlock', () => {
 
   it(`should be return a block by decimal number: #${blockNumber}`, async () => {
     block = await nod3.eth.getBlock(blockNumber)
-    expect(parseInt(block.number)).to.be.equal(parseInt(blockNumber))
+    validateBlock(block)
   })
 
   it('should be return a block by hash', async () => {
@@ -18,5 +19,6 @@ describe('getBlock', () => {
     block = await nod3.eth.getBlock(hash)
     expect(parseInt(block.number)).to.be.equal(parseInt(blockNumber) - 1)
     expect(block.hash).to.be.equal(hash)
+    validateBlock(block)
   })
 })
