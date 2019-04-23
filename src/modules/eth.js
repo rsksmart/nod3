@@ -65,6 +65,9 @@ export default {
 
   sendRawTransaction (txData) {
     return { method: 'eth_sendRawTransaction', params: [txData] }
+  },
+  netHashrate () {
+    return { method: 'eth_netHashrate', formatters: [toDecimal] }
   }
 
 }

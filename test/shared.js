@@ -56,13 +56,17 @@ export const testBlock = block => {
   })
 }
 
+export const checkDecimal = (value, name) => {
+  expect(`${value}`, `${name}`).to.be.equal(`${Number(value).toString(10)}`)
+  expect(typeof value).to.be.equal('number')
+  expect(value).to.be.equal(parseInt(value))
+}
+
 export const checkDecimalFields = (result, fields) => () => {
   for (let field of fields) {
     it(`${field} should be a decimal value`, () => {
       const value = result[field]
-      expect(`${value}`, `${field}`).to.be.equal(`${Number(value).toString(10)}`)
-      expect(typeof value).to.be.equal('number')
-      expect(value).to.be.equal(parseInt(value))
+      checkDecimal(value, field)
     })
   }
 }
