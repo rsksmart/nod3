@@ -33,4 +33,4 @@ export const toBase10 = (value, asNumber = false) => {
   return (type === 'number' || asNumber) ? Number(value) : value
 }
 
-export const toDecimal = value => parseInt(toBase10(value))
+export const toDecimal = value => (undefined !== value) ? parseInt(toBase10(value)) : value
