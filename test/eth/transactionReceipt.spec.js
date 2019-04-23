@@ -1,18 +1,10 @@
 import { expect } from 'chai'
-import * as sinon from 'sinon'
-import { fakeRpcSendMethod, nod3Creator, checkDecimalFields } from '../shared'
-let nod3 = global.nod3 || nod3Creator()
+import { fakeNod3 } from '../fakes'
+import { checkDecimalFields } from '../shared'
 
-describe(`# Transaction Receipt format`, () => {
-  let receipt
-  before(async function () {
-    sinon.replace(nod3.rpc, 'sendMethod', fakeRpcSendMethod)
-    receipt = await nod3.eth.getTransactionReceipt()
-  })
-
-  after(() => { sinon.restore() })
-
-  it('Fields', () => {
+describe(`# Transaction Receipt format`, fakeNod3((nod3) => {
+  it('Fields', async () => {
+    const receipt = await nod3.eth.getTransactionReceipt()
     const { logs } = receipt
     expect(Array.isArray(logs)).equal(true)
 
@@ -32,4 +24,4 @@ describe(`# Transaction Receipt format`, () => {
       i++
     }
   })
-})
+}))

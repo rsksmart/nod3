@@ -1,17 +1,9 @@
-import * as sinon from 'sinon'
 import { validateBlock } from './block.shared'
-import { fakeRpcSendMethod, nod3Creator } from '../shared'
-let nod3 = global.nod3 || nod3Creator()
+import { fakeNod3 } from '../fakes'
 
-describe(`# Block format`, () => {
-  let block
-  before(async function () {
-    sinon.replace(nod3.rpc, 'sendMethod', fakeRpcSendMethod)
-    block = await nod3.eth.getBlock()
-  })
-
-  after(() => { sinon.restore() })
-  it('valid block', () => {
+describe('# Block format', fakeNod3((nod3) => {
+  it('should be a valid block', async () => {
+    const block = await nod3.eth.getBlock()
     validateBlock(block)
   })
-})
+}))

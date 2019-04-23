@@ -1,18 +1,9 @@
-import * as sinon from 'sinon'
-import { fakeRpcSendMethod, nod3Creator } from '../shared'
+import { fakeNod3 } from '../fakes'
 import { validateTransaction } from './tx.shared'
-let nod3 = global.nod3 || nod3Creator()
 
-describe(`# Transaction format`, () => {
-  let tx
-  before(async function () {
-    sinon.replace(nod3.rpc, 'sendMethod', fakeRpcSendMethod)
-    tx = await nod3.eth.getTransactionByHash()
-  })
-
-  after(() => { sinon.restore() })
-
-  it('Fields', () => {
+describe('# Transaction format', fakeNod3((nod3) => {
+  it('should be a valid transaction', async () => {
+    const tx = await nod3.eth.getTransactionByHash()
     validateTransaction(tx)
   })
-})
+}))

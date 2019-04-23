@@ -1,7 +1,6 @@
 import { Nod3 } from '../src/'
 import { expect } from 'chai'
 import { isBlockHash } from '../src/lib/utils'
-import { getExample } from './examples'
 
 export const nod3Creator = () => {
   const url = process.env['url']
@@ -50,17 +49,11 @@ export const testNod3 = (nod3, options) => {
 
 export const testBlock = block => {
   describe(`Testing block ${(block) ? block.number : block}`, () => {
-
     it(`should have block properties`, () => {
       expect(isBlockHash(block.hash)).to.be.equal(true)
       expect(isBlockHash(block.parentHash)).to.be.equal(true)
     })
   })
-}
-
-export const fakeRpcSendMethod = (method, params) => {
-  const example = getExample(method)
-  return Promise.resolve(example)
 }
 
 export const checkDecimalFields = (result, fields) => () => {
