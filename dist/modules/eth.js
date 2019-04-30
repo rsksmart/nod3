@@ -65,6 +65,9 @@ var _utils = require('../lib/utils');exports.default =
 
   sendRawTransaction(txData) {
     return { method: 'eth_sendRawTransaction', params: [txData] };
+  },
+  netHashrate() {
+    return { method: 'eth_netHashrate', formatters: [_utils.toDecimal] };
   } };
 
 
