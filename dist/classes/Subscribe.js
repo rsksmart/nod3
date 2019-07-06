@@ -1,7 +1,7 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Subscribe = undefined;var _Nod = require('./Nod3');
-var _Subscription = require('./Subscription');
-var _filters = require('../lib/filters');var _filters2 = _interopRequireDefault(_filters);
-var _types = require('../lib/types');function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = exports.Subscribe = void 0;var _Nod = require("./Nod3");
+var _Subscription = require("./Subscription");
+var _filters = _interopRequireDefault(require("../lib/filters"));
+var _types = require("../lib/types");function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 class Subscribe {
   constructor(nod3) {
@@ -16,7 +16,7 @@ class Subscribe {
   async filter(filterName) {
     try {
       if (!filterName) throw new Error('Invalid Arguments');
-      let filterDef = _filters2.default[filterName];
+      let filterDef = _filters.default[filterName];
       if (!filterDef) throw new Error(`Unknown filter: ${filterName}`);
       filterDef = filterDef();
       let id = await this.send(filterDef);
@@ -79,7 +79,7 @@ class Subscribe {
 
   async removeAllNodeFilters() {
     try {
-      let filter = await this.filter(Object.keys(_filters2.default)[0]);
+      let filter = await this.filter(Object.keys(_filters.default)[0]);
       let id = parseInt(filter.id);
       let payload = new Array(id + 1).fill().
       map((v, i) => this.rpc.toPayload('eth_uninstallFilter', '0x' + Number(i + 1).toString(16)));
@@ -108,6 +108,6 @@ function addSubscription(id, type, payload, options = {}) {
 function methodId(key) {
   this.sid++;
   return `${key}_${this.sid}`;
-}exports.default =
+}var _default =
 
-Subscribe;
+Subscribe;exports.default = _default;

@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });class JsonRpc {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = exports.jsonRpcPayload = exports.JsonRpc = void 0;class JsonRpc {
   constructor(provider) {
     this.id = 0;
     this.provider = provider;
@@ -54,7 +54,7 @@
   }}exports.JsonRpc = JsonRpc;
 
 
-const jsonRpcPayload = exports.jsonRpcPayload = (method, params = [], id = 666) => {
+const jsonRpcPayload = (method, params = [], id = 666) => {
   params = Array.isArray(params) ? params : [params];
   return {
     jsonrpc: '2.0',
@@ -62,6 +62,6 @@ const jsonRpcPayload = exports.jsonRpcPayload = (method, params = [], id = 666) 
     params,
     id };
 
-};exports.default =
+};exports.jsonRpcPayload = jsonRpcPayload;var _default =
 
-JsonRpc;
+JsonRpc;exports.default = _default;

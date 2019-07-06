@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Provider = undefined;var _JsonRpc = require('./JsonRpc');
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.Provider = void 0;var _JsonRpc = require("./JsonRpc");
 class Provider {
   constructor(url, options = {}) {
     this.url = url || 'http://localhost:4444';

@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.default = {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
   newBlock() {
     return {
       method: 'eth_newBlockFilter',
@@ -10,7 +10,7 @@
       method: 'eth_newPendingTransactionFilter',
       cb: defaultCb };
 
-  } };
+  } };exports.default = _default;
 
 
 function defaultCb(err, data) {

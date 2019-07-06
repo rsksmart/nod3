@@ -1,11 +1,11 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });var _formatters = require('../lib/formatters');
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _formatters = require("../lib/formatters");
 
 
 
 
 
 
-var _utils = require('../lib/utils');exports.default =
+var _utils = require("../lib/utils");var _default =
 
 {
   getBlock(hashOrNumber, txs = false) {
@@ -68,7 +68,7 @@ var _utils = require('../lib/utils');exports.default =
   },
   netHashrate() {
     return { method: 'eth_netHashrate', formatters: [_utils.toDecimal] };
-  } };
+  } };exports.default = _default;
 
 
 

@@ -1,20 +1,20 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.logFormatter = exports.txReceiptFormatter = exports.txFormatter = exports.syncFormatter = exports.blockFormatter = exports.format = exports.formatKey = undefined;var _utils = require('./utils');
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.logFormatter = exports.txReceiptFormatter = exports.txFormatter = exports.syncFormatter = exports.blockFormatter = exports.format = exports.formatKey = void 0;var _utils = require("./utils");
 
-const formatKey = exports.formatKey = (obj, key, formatter) => {
+const formatKey = (obj, key, formatter) => {
   if (!obj) return obj;
   let value = obj[key];
   if (undefined !== value) {
     obj[key] = formatter(value);
   }
   return obj;
-};
+};exports.formatKey = formatKey;
 
-const format = exports.format = (obj, formats) => {
+const format = (obj, formats) => {
   for (let key in formats) {
     obj = formatKey(obj, key, formats[key]);
   }
   return obj;
-};
+};exports.format = format;
 
 const addDefaultFields = fields => {
   let def = {
@@ -27,7 +27,7 @@ const addDefaultFields = fields => {
   return Object.assign(def, fields);
 };
 
-const blockFormatter = exports.blockFormatter = block => {
+const blockFormatter = block => {
   block = format(block, {
     number: _utils.toDecimal,
     timestamp: _utils.toDecimal,
@@ -37,9 +37,9 @@ const blockFormatter = exports.blockFormatter = block => {
 
   block.transactions = block.transactions.map(tx => txFormatter(tx));
   return block;
-};
+};exports.blockFormatter = blockFormatter;
 
-const syncFormatter = exports.syncFormatter = sync => {
+const syncFormatter = sync => {
   if (typeof sync === 'object') {
     return format(sync, {
       startingBlock: _utils.toDecimal,
@@ -48,15 +48,15 @@ const syncFormatter = exports.syncFormatter = sync => {
 
   }
   return sync;
-};
+};exports.syncFormatter = syncFormatter;
 
-const txFormatter = exports.txFormatter = tx => {
+const txFormatter = tx => {
   return format(tx, addDefaultFields({
     nonce: _utils.toDecimal }));
 
-};
+};exports.txFormatter = txFormatter;
 
-const txReceiptFormatter = exports.txReceiptFormatter = receipt => {
+const txReceiptFormatter = receipt => {
   if (receipt && receipt.logs) {
     receipt.logs = receipt.logs.map(log => logFormatter(log));
     return format(receipt, addDefaultFields({
@@ -64,10 +64,10 @@ const txReceiptFormatter = exports.txReceiptFormatter = receipt => {
 
   }
   return receipt;
-};
+};exports.txReceiptFormatter = txReceiptFormatter;
 
-const logFormatter = exports.logFormatter = log => {
+const logFormatter = log => {
   return format(log, addDefaultFields({
     logIndex: _utils.toDecimal }));
 
-};
+};exports.logFormatter = logFormatter;

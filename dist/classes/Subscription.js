@@ -1,5 +1,5 @@
-'use strict';Object.defineProperty(exports, "__esModule", { value: true });exports.Subscription = undefined;var _types = require('../lib/types');
-var _Nod = require('./Nod3');
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.Subscription = void 0;var _types = require("../lib/types");
+var _Nod = require("./Nod3");
 
 class Subscription {
   constructor(id, type) {
