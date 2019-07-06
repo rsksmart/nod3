@@ -1,6 +1,6 @@
-import { nod3Creator } from './shared'
+import { nod3Creator, getRandomBlockNumber } from './shared'
 
-const blockNumber = process.env['blockNumber'] || Math.floor(Math.random() * 300000)
+const blockNumber = process.env['blockNumber'] || getRandomBlockNumber()
 const nod3 = nod3Creator()
 
 global.nod3 = nod3

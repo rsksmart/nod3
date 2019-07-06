@@ -70,3 +70,5 @@ export const checkDecimalFields = (result, fields) => () => {
     })
   }
 }
+
+export const getRandomBlockNumber = () => Math.floor(Math.random() * 2000)

@@ -3,7 +3,7 @@ import { nod3Creator } from '../shared'
 
 let nod3 = global.nod3 || nod3Creator()
 
-describe('#eth.blockNumber', function () {
+describe('# eth.blockNumber', function () {
   it(`should return a decimal block number`, async function () {
     let blockNumber = await nod3.eth.blockNumber()
     expect(parseInt(blockNumber)).to.be.equal(parseInt(blockNumber))
