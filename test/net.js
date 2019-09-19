@@ -6,7 +6,7 @@ const nod3 = global.nod3 || nod3Creator()
 describe('NET', () => {
   let net
   describe('# net_version', () => {
-    it(`should returns an object with name & id`, async () => {
+    it(`should return an object with name & id`, async () => {
       net = await nod3.net.version()
       expect(net).to.be.an('object')
       expect(net).has.property('id')

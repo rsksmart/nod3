@@ -9,7 +9,7 @@ export const checkBlockHash = value => {
 
 export const isBlockHash = value => checkBlockHash(value) !== null
 
-export const isHashOrNuber = (hashOrNumber, toHex = true) => {
+export const isHashOrNumber = (hashOrNumber, toHex = true) => {
   let hash = (isBlockHash(hashOrNumber)) ? hashOrNumber : null
   let number = (!isNaN(parseInt(hashOrNumber)) && !hash) ? hashOrNumber : null
   number = (number !== null && toHex) ? toHexStr(hashOrNumber) : number

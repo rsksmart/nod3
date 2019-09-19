@@ -20,7 +20,7 @@ export class Subscribe {
       if (!filterDef) throw new Error(`Unknown filter: ${filterName}`)
       filterDef = filterDef()
       let id = await this.send(filterDef)
-      if (!id) throw new Error('Node returns invalid id')
+      if (!id) throw new Error('The node returns an invalid id')
       let payload = this.rpc.toPayload('eth_getFilterChanges', [id])
       let cb = filterDef.cb
       return addSubscription.bind(this)(id, SUBSCRIPTIONS.FILTER, payload, { cb })
