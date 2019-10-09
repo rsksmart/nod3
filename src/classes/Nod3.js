@@ -1,11 +1,8 @@
 import * as utils from '../lib/utils'
-import eth from '../modules/eth'
-import rsk from '../modules/rsk'
-import net from '../modules/net'
-import txpool from '../modules/txpool'
 import { Subscribe } from '../classes/Subscribe'
 import { HttpProvider } from '../classes/HttpProvider'
 import { NOD3_MODULE } from '../lib/types'
+import modules from '../modules'
 
 const BATCH_KEY = 'isBatch' + Math.random()
 const isBatch = key => key === BATCH_KEY
@@ -18,10 +15,10 @@ export class Nod3 {
     this.isBatch = isBatch
     this.BATCH_KEY = BATCH_KEY
     this.utils = utils
-    this.eth = addModule(eth, this)
-    this.rsk = addModule(rsk, this)
-    this.net = addModule(net, this)
-    this.txpool = addModule(txpool, this)
+    // modules
+    for (let module in modules) {
+      this[module] = addModule(modules[module], this)
+    }
     this.subscribe = new Subscribe(this)
   }
 
