@@ -1,11 +1,8 @@
 "use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.format = format;exports.Nod3 = void 0;var utils = _interopRequireWildcard(require("../lib/utils"));
-var _eth = _interopRequireDefault(require("../modules/eth"));
-var _rsk = _interopRequireDefault(require("../modules/rsk"));
-var _net = _interopRequireDefault(require("../modules/net"));
-var _txpool = _interopRequireDefault(require("../modules/txpool"));
 var _Subscribe = require("../classes/Subscribe");
 var _HttpProvider = require("../classes/HttpProvider");
-var _types = require("../lib/types");function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;} else {var newObj = {};if (obj != null) {for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) {var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {};if (desc.get || desc.set) {Object.defineProperty(newObj, key, desc);} else {newObj[key] = obj[key];}}}}newObj.default = obj;return newObj;}}
+var _types = require("../lib/types");
+var _modules = _interopRequireDefault(require("../modules"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _getRequireWildcardCache() {if (typeof WeakMap !== "function") return null;var cache = new WeakMap();_getRequireWildcardCache = function () {return cache;};return cache;}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;}var cache = _getRequireWildcardCache();if (cache && cache.has(obj)) {return cache.get(obj);}var newObj = {};if (obj != null) {var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) {var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;if (desc && (desc.get || desc.set)) {Object.defineProperty(newObj, key, desc);} else {newObj[key] = obj[key];}}}}newObj.default = obj;if (cache) {cache.set(obj, newObj);}return newObj;}
 
 const BATCH_KEY = 'isBatch' + Math.random();
 const isBatch = key => key === BATCH_KEY;
@@ -18,10 +15,10 @@ class Nod3 {
     this.isBatch = isBatch;
     this.BATCH_KEY = BATCH_KEY;
     this.utils = utils;
-    this.eth = addModule(_eth.default, this);
-    this.rsk = addModule(_rsk.default, this);
-    this.net = addModule(_net.default, this);
-    this.txpool = addModule(_txpool.default, this);
+    // modules
+    for (let module in _modules.default) {
+      this[module] = addModule(_modules.default[module], this);
+    }
     this.subscribe = new _Subscribe.Subscribe(this);
   }
 

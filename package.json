@@ -1,6 +1,6 @@
 {
   "name": "nod3",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Minimal Javascript RPC communication with Ethereum / RSK node",
   "main": "dist/index.js",
   "scripts": {

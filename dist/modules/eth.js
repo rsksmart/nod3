@@ -10,7 +10,7 @@ var _utils = require("../lib/utils");var _default =
 {
   getBlock(hashOrNumber, txs = false) {
     let method = 'eth_getBlockByNumber';
-    let hOn = (0, _utils.isHashOrNuber)(hashOrNumber);
+    let hOn = (0, _utils.isHashOrNumber)(hashOrNumber);
 
     if (hOn.hash) method = 'eth_getBlockByHash';else
     hashOrNumber = hOn.number !== null ? hOn.number : hashOrNumber;
@@ -20,7 +20,7 @@ var _utils = require("../lib/utils");var _default =
   },
 
   getTransactionByIndex(hashOrNumber, index) {
-    let hOn = (0, _utils.isHashOrNuber)(hashOrNumber);
+    let hOn = (0, _utils.isHashOrNumber)(hashOrNumber);
     let params = hOn.hash ? [hOn.hash] : [hOn.number];
     let method = hOn.hash ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
     index = (0, _utils.toHexStr)(index);
@@ -66,14 +66,20 @@ var _utils = require("../lib/utils");var _default =
   sendRawTransaction(txData) {
     return { method: 'eth_sendRawTransaction', params: [txData] };
   },
+
   netHashrate() {
     return { method: 'eth_netHashrate', formatters: [_utils.toDecimal] };
+  },
+
+  call(callObj, block = 'latest') {
+    block = parseBlockArg(block);
+    return { method: 'eth_call', params: [callObj, block] };
   } };exports.default = _default;
 
 
 
 function parseBlockArg(block) {
-  let hOn = (0, _utils.isHashOrNuber)(block);
+  let hOn = (0, _utils.isHashOrNumber)(block);
   if (hOn.hash) block = hOn.hash;
   if (hOn.number) block = hOn.number;
   return block;

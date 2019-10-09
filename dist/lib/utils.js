@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.toDecimal = exports.toBase10 = exports.isNet = exports.netName = exports.toHexStr = exports.isHexStr = exports.isHashOrNuber = exports.isBlockHash = exports.checkBlockHash = void 0;var _types = require("./types");
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.toDecimal = exports.toBase10 = exports.isNet = exports.netName = exports.toHexStr = exports.isHexStr = exports.isHashOrNumber = exports.isBlockHash = exports.checkBlockHash = void 0;var _types = require("./types");
 
 const checkBlockHash = value => {
   value = String(value).toLowerCase();
@@ -9,12 +9,12 @@ const checkBlockHash = value => {
 
 const isBlockHash = value => checkBlockHash(value) !== null;exports.isBlockHash = isBlockHash;
 
-const isHashOrNuber = (hashOrNumber, toHex = true) => {
+const isHashOrNumber = (hashOrNumber, toHex = true) => {
   let hash = isBlockHash(hashOrNumber) ? hashOrNumber : null;
   let number = !isNaN(parseInt(hashOrNumber)) && !hash ? hashOrNumber : null;
   number = number !== null && toHex ? toHexStr(hashOrNumber) : number;
   return { hash, number };
-};exports.isHashOrNuber = isHashOrNuber;
+};exports.isHashOrNumber = isHashOrNumber;
 
 const isHexStr = str => /^0x[0-9a-f]*$/.test(str);exports.isHexStr = isHexStr;
 
