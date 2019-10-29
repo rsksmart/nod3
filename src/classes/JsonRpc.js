@@ -8,6 +8,7 @@ export class JsonRpc {
     try {
       let data = await this.provider.send(payload)
       if (undefined === data) throw new Error('No data')
+      if (data.error) throw new Error(data.error)
       if (Array.isArray(payload)) return data.map(d => this.checkData(d))
       else return this.checkData(data)
     } catch (err) {
