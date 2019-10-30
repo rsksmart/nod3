@@ -8,7 +8,7 @@
     "clean": "rm -rf dist",
     "md": "mkdir dist",
     "lint": "npx eslint src/**/*",
-    "test": "npx mocha --file test/test.js"
+    "test": "npx mocha test/**/*.spec.js"
   },
   "repository": {
     "type": "git",
