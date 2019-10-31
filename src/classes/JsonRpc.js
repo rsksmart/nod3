@@ -1,3 +1,24 @@
+
+const JSONRPC_ERROR_NAME = 'JSON_RPC_ERROR'
+export class JsonRpcError extends Error {
+  constructor ({ message, code }, ...args) {
+    super(...args)
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, JsonRpcError)
+    }
+    this.message = message
+    this.errorCode = code
+  }
+  getName () {
+    return JSONRPC_ERROR_NAME
+  }
+  static isJsonRpcError (error = {}) {
+    const { getName } = error
+    const name = (typeof getName === 'function') ? getName() : undefined
+    return name === JSONRPC_ERROR_NAME
+  }
+}
 export class JsonRpc {
   constructor (provider) {
     this.id = 0
@@ -8,7 +29,7 @@ export class JsonRpc {
     try {
       let data = await this.provider.send(payload)
       if (undefined === data) throw new Error('No data')
-      if (data.error) throw new Error(data.error)
+      if (data.error) throw new JsonRpcError(data.error)
       if (Array.isArray(payload)) return data.map(d => this.checkData(d))
       else return this.checkData(data)
     } catch (err) {
@@ -16,7 +37,7 @@ export class JsonRpc {
     }
   }
 
-  sendMethod (method, params) {
+  sendMethod (method, params = []) {
     let payload = this.toPayload(method, params)
     return this.send(payload)
   }
