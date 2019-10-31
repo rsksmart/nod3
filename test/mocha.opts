@@ -1,3 +1,4 @@
 --require @babel/register
 --recursive
 --globals global
+--file test/test.js

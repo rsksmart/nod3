@@ -1,6 +1,6 @@
-import { JsonRpc, JsonRpcError } from '../src/classes/JsonRpc'
-import HttpProvider from '../src/classes/HttpProvider'
-import { JsonRpcServer, JsonRpcServerError } from './Servers/JsonRpcServer'
+import { JsonRpc, JsonRpcError } from '../../src/classes/JsonRpc'
+import { HttpProvider } from '../../src/classes/HttpProvider'
+import { JsonRpcServer, JsonRpcServerError } from '../Servers/JsonRpcServer'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 

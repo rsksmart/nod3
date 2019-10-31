@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { checkConection } from './checkConnection'
-import { nod3Creator, testNod3, getRandomBlockNumber } from './shared'
+import { checkConection } from '../checkConnection'
+import { nod3Creator, testNod3, getRandomBlockNumber } from '../shared'
 
 let blockNumber = getRandomBlockNumber()
 let nod3 = global.nod3 || nod3Creator()
