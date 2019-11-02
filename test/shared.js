@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { isBlockHash } from '../src/lib/utils'
 
 export const nod3Creator = () => {
-  const url = process.env['url']
+  const url = process.env['url'] || 'http://localhost:4444'
   let nod3 = new Nod3(new Nod3.providers.HttpProvider(url))
   return nod3
 }

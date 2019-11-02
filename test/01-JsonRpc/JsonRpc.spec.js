@@ -11,8 +11,8 @@ const { expect } = chai
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
 describe(`JsonRpc`, function () {
-  testJsonRpc('http://localhost:4004', 'HttpProvider over HTTP')
-  testJsonRpc('https://localhost:4005', 'HttpProvider over HTTPS')
+  testJsonRpc('http://localhost:4002', 'HttpProvider over HTTP')
+  testJsonRpc('https://localhost:4003', 'HttpProvider over HTTPS')
 })
 
 function testJsonRpc (url, testTitle) {

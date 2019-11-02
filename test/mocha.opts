@@ -1,4 +1,5 @@
 --require @babel/register
 --recursive
 --globals global
+--sort
 --file test/test.js
