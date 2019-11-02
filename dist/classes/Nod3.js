@@ -49,8 +49,7 @@ class Nod3 {
   static send(payload) {
     let { method, params, formatters } = payload;
     return this.rpc.sendMethod(method, params).
-    then(res => format(res, formatters)).
-    catch(err => this.log(err));
+    then(res => format(res, formatters));
   }}exports.Nod3 = Nod3;
 
 

@@ -1,4 +1,25 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = exports.jsonRpcPayload = exports.JsonRpc = void 0;class JsonRpc {
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.default = exports.jsonRpcPayload = exports.JsonRpc = exports.JsonRpcError = void 0;
+const JSONRPC_ERROR_NAME = 'JSON_RPC_ERROR';
+class JsonRpcError extends Error {
+  constructor({ message, code }, ...args) {
+    super(...args);
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, JsonRpcError);
+    }
+    this.message = message;
+    this.errorCode = code;
+  }
+  getName() {
+    return JSONRPC_ERROR_NAME;
+  }
+  static isJsonRpcError(error = {}) {
+    const { getName } = error;
+    const name = typeof getName === 'function' ? getName() : undefined;
+    return name === JSONRPC_ERROR_NAME;
+  }}exports.JsonRpcError = JsonRpcError;
+
+class JsonRpc {
   constructor(provider) {
     this.id = 0;
     this.provider = provider;
@@ -8,6 +29,7 @@
     try {
       let data = await this.provider.send(payload);
       if (undefined === data) throw new Error('No data');
+      if (data.error) throw new JsonRpcError(data.error);
       if (Array.isArray(payload)) return data.map(d => this.checkData(d));else
       return this.checkData(data);
     } catch (err) {
@@ -15,7 +37,7 @@
     }
   }
 
-  sendMethod(method, params) {
+  sendMethod(method, params = []) {
     let payload = this.toPayload(method, params);
     return this.send(payload);
   }
