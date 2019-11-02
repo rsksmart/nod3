@@ -1,9 +1,10 @@
-import axios from 'axios'
 import { Provider } from './Provider'
+import { HttpClient } from '../classes/HttpClient'
 
 export class HttpProvider extends Provider {
   constructor (url, options = {}) {
     super(url, options)
+    this.client = new HttpClient(url, { keepAlive: true })
   }
 
   async isConnected () {
@@ -17,13 +18,12 @@ export class HttpProvider extends Provider {
 
   async send (payload) {
     try {
-      let url = this.url
       let headers = { 'Content-Type': 'application/json' }
-      const res = await axios.post(url, payload, { headers })
+      const res = await this.client.post(payload, { headers })
         .catch(err => {
-          // wrap rskj & axios errors
+          // wrap rskj errors
           err = (err.response && err.response.data) ? err.response.data.error : err
-          return Promise.reject(err.message)
+          return Promise.reject(err.message || `${err}`)
         })
       return res.data
     } catch (err) {
@@ -31,3 +31,5 @@ export class HttpProvider extends Provider {
     }
   }
 }
+
+export default HttpProvider
