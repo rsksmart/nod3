@@ -10,6 +10,9 @@
     "lint": "npx eslint src/**/*",
     "test": "npx mocha test/**/*.spec.js"
   },
+  "bin": {
+    "nod3-cli": "./dist/cli/nod3-cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rsksmart/nod3.git"
