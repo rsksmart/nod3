@@ -74,6 +74,10 @@ export default {
   call (callObj, block = 'latest') {
     block = parseBlockArg(block)
     return { method: 'eth_call', params: [callObj, block] }
+  },
+
+  chainId () {
+    return { method: 'eth_chainId', formatters: [toDecimal] }
   }
 
 }
