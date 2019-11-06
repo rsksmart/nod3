@@ -1,6 +1,7 @@
 import * as utils from '../lib/utils'
 import { Subscribe } from '../classes/Subscribe'
 import { HttpProvider } from '../classes/HttpProvider'
+import { CurlProvider } from '../classes/CurlProvider'
 import { NOD3_MODULE } from '../lib/types'
 import modules from '../modules'
 
@@ -15,11 +16,16 @@ export class Nod3 {
     this.isBatch = isBatch
     this.BATCH_KEY = BATCH_KEY
     this.utils = utils
+    this.skipFormatters = !!(provider instanceof CurlProvider)
     // modules
     for (let module in modules) {
       this[module] = addModule(modules[module], this)
     }
     this.subscribe = new Subscribe(this)
+  }
+
+  setSkipFormatters (v) {
+    this.skipFormatters = !!v
   }
 
   isConnected () {
@@ -49,7 +55,7 @@ export class Nod3 {
   static send (payload) {
     let { method, params, formatters } = payload
     return this.rpc.sendMethod(method, params)
-      .then(res => format(res, formatters))
+      .then(res => (this.skipFormatters === true) ? res : format(res, formatters))
   }
 }
 
@@ -86,4 +92,4 @@ function addModule (mod, nod3) {
   })
 }
 
-Nod3.providers = { HttpProvider }
+Nod3.providers = { HttpProvider, CurlProvider }

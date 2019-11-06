@@ -2,9 +2,9 @@ import { Nod3 } from '../src/'
 import { expect } from 'chai'
 import { isBlockHash } from '../src/lib/utils'
 
-export const nod3Creator = () => {
+export const nod3Creator = (Provider = Nod3.providers.HttpProvider) => {
   const url = process.env['url'] || 'http://localhost:4444'
-  let nod3 = new Nod3(new Nod3.providers.HttpProvider(url))
+  let nod3 = new Nod3(new Provider(url))
   return nod3
 }
 
