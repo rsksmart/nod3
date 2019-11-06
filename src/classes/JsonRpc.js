@@ -64,15 +64,15 @@ export class JsonRpc {
   }
 
   isValidResponse (res) {
-    const isValidId = this.isValidId
-    return Array.isArray(res) ? res.every(validate) : validate(res)
-    function validate (message) {
+    const validate = message => {
       return !!message &&
         !message.error &&
         message.jsonrpc === '2.0' &&
         isValidId(message.id) &&
         message.result !== undefined
     }
+    const isValidId = this.isValidId
+    return Array.isArray(res) ? res.every(validate) : validate(res)
   }
 }
 
