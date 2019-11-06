@@ -74,6 +74,10 @@ var _utils = require("../lib/utils");var _default =
   call(callObj, block = 'latest') {
     block = parseBlockArg(block);
     return { method: 'eth_call', params: [callObj, block] };
+  },
+
+  chainId() {
+    return { method: 'eth_chainId', formatters: [_utils.toDecimal] };
   } };exports.default = _default;
 
 

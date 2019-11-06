@@ -1,8 +1,9 @@
 "use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.format = format;exports.Nod3 = void 0;var utils = _interopRequireWildcard(require("../lib/utils"));
 var _Subscribe = require("../classes/Subscribe");
 var _HttpProvider = require("../classes/HttpProvider");
+var _CurlProvider = require("../classes/CurlProvider");
 var _types = require("../lib/types");
-var _modules = _interopRequireDefault(require("../modules"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _getRequireWildcardCache() {if (typeof WeakMap !== "function") return null;var cache = new WeakMap();_getRequireWildcardCache = function () {return cache;};return cache;}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;}var cache = _getRequireWildcardCache();if (cache && cache.has(obj)) {return cache.get(obj);}var newObj = {};if (obj != null) {var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) {var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;if (desc && (desc.get || desc.set)) {Object.defineProperty(newObj, key, desc);} else {newObj[key] = obj[key];}}}}newObj.default = obj;if (cache) {cache.set(obj, newObj);}return newObj;}
+var _modules = _interopRequireDefault(require("../modules"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _getRequireWildcardCache() {if (typeof WeakMap !== "function") return null;var cache = new WeakMap();_getRequireWildcardCache = function () {return cache;};return cache;}function _interopRequireWildcard(obj) {if (obj && obj.__esModule) {return obj;}if (obj === null || typeof obj !== "object" && typeof obj !== "function") {return { default: obj };}var cache = _getRequireWildcardCache();if (cache && cache.has(obj)) {return cache.get(obj);}var newObj = {};var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;for (var key in obj) {if (Object.prototype.hasOwnProperty.call(obj, key)) {var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;if (desc && (desc.get || desc.set)) {Object.defineProperty(newObj, key, desc);} else {newObj[key] = obj[key];}}}newObj.default = obj;if (cache) {cache.set(obj, newObj);}return newObj;}
 
 const BATCH_KEY = 'isBatch' + Math.random();
 const isBatch = key => key === BATCH_KEY;
@@ -15,11 +16,16 @@ class Nod3 {
     this.isBatch = isBatch;
     this.BATCH_KEY = BATCH_KEY;
     this.utils = utils;
+    this.skipFormatters = !!(provider instanceof _CurlProvider.CurlProvider);
     // modules
     for (let module in _modules.default) {
       this[module] = addModule(_modules.default[module], this);
     }
     this.subscribe = new _Subscribe.Subscribe(this);
+  }
+
+  setSkipFormatters(v) {
+    this.skipFormatters = !!v;
   }
 
   isConnected() {
@@ -49,7 +55,7 @@ class Nod3 {
   static send(payload) {
     let { method, params, formatters } = payload;
     return this.rpc.sendMethod(method, params).
-    then(res => format(res, formatters));
+    then(res => this.skipFormatters === true ? res : format(res, formatters));
   }}exports.Nod3 = Nod3;
 
 
@@ -86,4 +92,4 @@ function addModule(mod, nod3) {
 
 }
 
-Nod3.providers = { HttpProvider: _HttpProvider.HttpProvider };
+Nod3.providers = { HttpProvider: _HttpProvider.HttpProvider, CurlProvider: _CurlProvider.CurlProvider };
