@@ -17,7 +17,6 @@ class CurlProvider extends _Provider.Provider {
 
 
 function Client(url) {
-
   const curlHeaders = headers => Object.entries(headers).map(h => `-H "${h[0]}":"${h[1]}"`).join(' ');
 
   const makeCurlCommand = ({ data, headers, method } = {}) => {
