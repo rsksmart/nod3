@@ -71,3 +71,16 @@ export const logFormatter = log => {
     logIndex: toDecimal
   }))
 }
+
+export const addTraceIndex = trace => {
+  let transactionHash, i
+  for (let itx of trace) {
+    if (transactionHash !== itx.transactionHash) {
+      i = 1
+      transactionHash = itx.transactionHash
+    }
+    itx._index = i
+    i++
+  }
+  return trace
+}

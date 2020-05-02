@@ -12,6 +12,7 @@ describe(`# trace`, function () {
         for (let action of trace) {
           testAction(action)
         }
+        testIndexes(trace)
       }
     })
   })
@@ -29,9 +30,9 @@ describe(`# trace`, function () {
         expect(hashes.size).to.be.equal(transactions.length, 'transactions length')
         expect([...hashes]).to.be.deep.equal(transactions, 'transactions hashes')
         for (let item of trace) {
-          expect(item).to.be.an('object')
           testAction(item)
         }
+        testIndexes(trace)
       })
     }
   })
@@ -39,6 +40,17 @@ describe(`# trace`, function () {
 
 function testAction (action) {
   expect(action).to.be.an('object', 'action should be an object')
-  expect(Object.keys(action)).to.include.members(['blockNumber', 'blockHash', 'transactionHash', 'action', 'result'], 'action properties')
+  expect(Object.keys(action)).to.include.members([
+    'blockNumber', 'blockHash', 'transactionHash', 'action', 'result', '_index'], 'action properties'
+  )
   checkDecimal(action.blockNumber)
 }
+
+function testIndexes (trace) {
+  let i = 1
+  for (let itx of trace) {
+    expect(itx._index).to.be.equal(i)
+    i++
+  }
+}
+
