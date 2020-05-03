@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.logFormatter = exports.txReceiptFormatter = exports.txFormatter = exports.syncFormatter = exports.blockFormatter = exports.format = exports.formatKey = void 0;var _utils = require("./utils");
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.addTraceIndex = exports.logFormatter = exports.txReceiptFormatter = exports.txFormatter = exports.syncFormatter = exports.blockFormatter = exports.format = exports.formatKey = void 0;var _utils = require("./utils");
 
 const formatKey = (obj, key, formatter) => {
   if (!obj) return obj;
@@ -71,3 +71,16 @@ const logFormatter = log => {
     logIndex: _utils.toDecimal }));
 
 };exports.logFormatter = logFormatter;
+
+const addTraceIndex = trace => {
+  let transactionHash, i;
+  for (let itx of trace) {
+    if (transactionHash !== itx.transactionHash) {
+      i = 1;
+      transactionHash = itx.transactionHash;
+    }
+    itx._index = i;
+    i++;
+  }
+  return trace;
+};exports.addTraceIndex = addTraceIndex;
