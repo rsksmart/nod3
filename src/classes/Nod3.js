@@ -9,10 +9,11 @@ const BATCH_KEY = 'isBatch' + Math.random()
 const isBatch = key => key === BATCH_KEY
 
 export class Nod3 {
-  constructor (provider, options = {}) {
+  constructor (provider, { logger, debugMode } = {}) {
     this.provider = provider
     this.rpc = provider.rpc
-    this.log = options.logger || function (err) { console.log(err) }
+    this.log = logger || function (err) { console.log(err) }
+    this.debugMode = debugMode
     this.isBatch = isBatch
     this.BATCH_KEY = BATCH_KEY
     this.utils = utils
@@ -52,10 +53,16 @@ export class Nod3 {
     }
   }
 
-  static send (payload) {
+  static async send (payload) {
     let { method, params, formatters } = payload
-    return this.rpc.sendMethod(method, params)
-      .then(res => (this.skipFormatters === true) ? res : format(res, formatters))
+    let { rpc, skipFormatters, debugMode, log } = this
+    let time = (debugMode) ? Date.now() : null
+    let res = await rpc.sendMethod(method, params)
+    if (time) {
+      time = Date.now() - time
+      log(`${method} (${params}) -- time:${time}ms`)
+    }
+    return (skipFormatters === true) ? res : format(res, formatters)
   }
 }
 
