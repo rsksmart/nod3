@@ -1,0 +1,55 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/tmp
+    environment:
+      RSK_NODE_PATH: ~/tmp/rsk-node
+      DB_PATH: ~/tmp/rsk-node/db
+    docker:
+      - image: circleci/openjdk:8-jdk-node
+
+    steps:
+      - checkout
+      - run:
+          name: 'Install dependencies'
+          command: npm install
+      - run:
+          name: Compile rskj
+          command: |
+            cd ~/tmp
+            mkdir -p ${RSK_NODE_PATH}
+            mkdir -p ${DB_PATH}
+            cp ./.rskj-conf/node.conf ${RSK_NODE_PATH}
+            git clone git://github.com/rsksmart/rskj
+            cd rskj
+            LASTEST_TAG=$(git tag --sort=-creatordate | head -1)
+            git checkout ${LATEST_TAG}
+            ./configure.sh
+            ./gradlew clean build -x test
+            cd ~/tmp
+            ls ~/tmp/rskj/rskj-core/build/libs/rskj-core-*-all.jar
+            ln -s  ~/tmp/rskj/rskj-core/build/libs/rskj-core-*-all.jar ${RSK_NODE_PATH}/rsk.jar
+      - run:
+          name: Start rskj node
+          command: |
+            nohup java -Ddatabase.dir=${DB_PATH} -Drsk.conf.file=${RSK_NODE_PATH}/node.conf -cp ${RSK_NODE_PATH}/rsk.jar  co.rsk.Start --regtest & RSK_PID=$!
+            until nc -z 127.0.0.1 4444
+            do
+              echo "Waiting for RskJ..."
+              sleep 1
+            done
+      - run:
+          name: 'Lint'
+          command: npm run lint
+      - run:
+          name: 'Wait for block'
+          command: |
+            chmod +x ./test/waitForBlock.sh
+            ./test/waitForBlock.sh 20
+      - run:
+          name: "Test"
+          command: npm run test
+      - run:
+          name: 'Build'
+          command: npm run build
+          
