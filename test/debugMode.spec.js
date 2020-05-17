@@ -33,4 +33,18 @@ describe('Debug Mode', function () {
     expect(result.time).to.be.a('number')
     expect(result.time).to.be.greaterThan(0)
   })
+
+  it(`should add the debug method`, async () => {
+    let results = []
+    nod3.setDebug((res) => results.push(res))
+    await nod3.eth.getBlock('latest', true)
+    expect(results.length).to.be.equal(1)
+    let stats = results[0]
+    expect(stats).to.be.an('object')
+    let { method, params, time } = stats
+    expect(method).to.be.equal('eth_getBlockByNumber')
+    expect(params).to.be.deep.equal(['latest', true])
+    expect(time).to.be.a('number')
+    expect(time).to.be.greaterThan(0)
+  })
 })

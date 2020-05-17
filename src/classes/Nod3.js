@@ -26,6 +26,9 @@ export class Nod3 {
     this.subscribe = new Subscribe(this)
   }
 
+  setDebug (debug) {
+    this.doDebug = debug
+  }
   logDebug ({ method, params, time }) {
     this.log(`${method} (${params}) -- time:${time}ms`)
   }
