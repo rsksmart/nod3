@@ -9,11 +9,12 @@ const BATCH_KEY = 'isBatch' + Math.random()
 const isBatch = key => key === BATCH_KEY
 
 export class Nod3 {
-  constructor (provider, { logger, debugMode } = {}) {
+  constructor (provider, { logger, debug } = {}) {
     this.provider = provider
     this.rpc = provider.rpc
     this.log = logger || function (err) { console.log(err) }
-    this.debugMode = debugMode
+    if (debug && typeof debug !== 'function') debug = this.logDebug
+    this.doDebug = debug
     this.isBatch = isBatch
     this.BATCH_KEY = BATCH_KEY
     this.utils = utils
@@ -25,6 +26,9 @@ export class Nod3 {
     this.subscribe = new Subscribe(this)
   }
 
+  logDebug ({ method, params, time }) {
+    this.log(`${method} (${params}) -- time:${time}ms`)
+  }
   setSkipFormatters (v) {
     this.skipFormatters = !!v
   }
@@ -35,6 +39,7 @@ export class Nod3 {
 
   async batchRequest (commands, methodName) {
     try {
+      let { doDebug } = this
       let batch = commands.map(c => {
         let mName = methodName || c[0]
         mName = mName.split('.')
@@ -46,7 +51,14 @@ export class Nod3 {
         return method(...params, this.BATCH_KEY)
       })
       let payload = batch.map(b => this.rpc.toPayload(b.method, b.params))
+      let time = (doDebug) ? Date.now() : undefined
       let data = await this.rpc.send(payload)
+      if (doDebug) {
+        time = Date.now() - time
+        let method = [...new Set(payload.map(({ method }) => method))]
+        let params = payload.map(({ params }) => params)
+        doDebug({ method, params, time })
+      }
       return data.map((d, i) => format(d, batch[i].formatters))
     } catch (err) {
       return Promise.reject(err)
@@ -55,12 +67,12 @@ export class Nod3 {
 
   static async send (payload) {
     let { method, params, formatters } = payload
-    let { rpc, skipFormatters, debugMode, log } = this
-    let time = (debugMode) ? Date.now() : null
+    let { rpc, skipFormatters, doDebug } = this
+    let time = (doDebug) ? Date.now() : null
     let res = await rpc.sendMethod(method, params)
-    if (time) {
+    if (doDebug) {
       time = Date.now() - time
-      log(`${method} (${params}) -- time:${time}ms`)
+      doDebug({ method, params, time })
     }
     return (skipFormatters === true) ? res : format(res, formatters)
   }
