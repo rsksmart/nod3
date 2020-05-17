@@ -1,0 +1,9 @@
+{
+  "recursive": true,
+  "require": "@babel/register",
+  "sort": true,
+  "file": "test/test.js",
+  "globals": [
+    "global"
+  ]
+}
