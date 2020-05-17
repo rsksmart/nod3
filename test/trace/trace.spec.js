@@ -1,12 +1,12 @@
 import { expect } from 'chai'
 import { nod3Creator, checkDecimal, getRandomBlockNumber } from '../shared'
 let nod3 = global.nod3 || nod3Creator()
-const txs = ['0x3dc63d1963891243522bb5cca95127afbefa8b2a9dde6e62e5cd95c35fda8457']
 const blocks = [...Array(1)].map(() => getRandomBlockNumber())
 describe(`# trace`, function () {
   describe(`trace_transaction()`, function () {
     it(`should return a transaction trace`, async () => {
-      for (let tx of txs) {
+      let { transactions } = await nod3.eth.getBlock(blocks[0])
+      for (let tx of transactions) {
         const trace = await nod3.trace.transaction(tx)
         expect(trace).to.be.an('array', 'trace should be an array')
         for (let action of trace) {
@@ -53,4 +53,3 @@ function testIndexes (trace) {
     i++
   }
 }
-

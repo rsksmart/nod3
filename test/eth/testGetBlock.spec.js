@@ -1,8 +1,8 @@
 import { expect } from 'chai'
-import { nod3Creator, getRandomBlockNumber } from '../shared'
+import { nod3Creator } from '../shared'
 import { validateBlock } from './block.shared'
 
-let blockNumber = global.blockNumber || getRandomBlockNumber()
+let blockNumber = global.blockNumber
 let nod3 = global.nod3 || nod3Creator()
 
 describe(`# getBlock`, () => {

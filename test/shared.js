@@ -26,11 +26,7 @@ export const testNod3 = (nod3, options) => {
           })
         })
 
-        params = new Set()
-        data.forEach(block => {
-          params.add(block.parentHash)
-        })
-        params = [...params].slice(0, total).map(h => [h, false])
+        params = data.map(({ hash }) => [hash, false])
 
         describe(`# by HASH `, () => {
           it(`should be return an array of ${total} blocks`, async () => {
@@ -71,4 +67,4 @@ export const checkDecimalFields = (result, fields) => () => {
   }
 }
 
-export const getRandomBlockNumber = () => Math.floor(Math.random() * 2000)
+export const getRandomBlockNumber = (max = 20) => Math.floor(Math.random() * max)

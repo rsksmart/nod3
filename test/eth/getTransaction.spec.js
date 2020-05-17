@@ -6,7 +6,7 @@ let nod3 = global.nod3 || nod3Creator()
 describe('Get Transactions', () => {
   describe(`# getTransaction - by block number, index`, () => {
     it('should return a tx object', async () => {
-      let tx = await nod3.eth.getTransactionByIndex(2001, 0)
+      let tx = await nod3.eth.getTransactionByIndex(20, 0)
       validateTransaction(tx)
 
       describe(`# getTransaction - by block hash, index`, () => {
