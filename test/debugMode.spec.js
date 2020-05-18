@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { nod3Creator } from './shared'
 import { validateBlock } from './eth/block.shared'
+import * as sinon from 'sinon'
 
 describe('Debug Mode', function () {
   this.timeout(60000)
@@ -10,6 +11,7 @@ describe('Debug Mode', function () {
 
   it('should add a response time', async () => {
     const block = await nod3.eth.getBlock('latest', true)
+    nod3.setDebug(debug)
     let stats = results[0]
     validateBlock(block)
     expect(stats).to.be.an('object')
@@ -46,5 +48,16 @@ describe('Debug Mode', function () {
     expect(params).to.be.deep.equal(['latest', true])
     expect(time).to.be.a('number')
     expect(time).to.be.greaterThan(0)
+  })
+
+  describe('Default option', function () {
+    let n3 = nod3Creator(null, { debug: true })
+    let spy = sinon.spy(n3, 'log')
+    after(() => spy.restore())
+    it('should log the response time', async () => {
+      const block = await n3.eth.getBlock('latest', true)
+      validateBlock(block)
+      expect(spy.callCount).to.be.equal(1)
+    })
   })
 })
