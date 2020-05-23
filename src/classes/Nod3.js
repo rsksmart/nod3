@@ -43,7 +43,7 @@ export class Nod3 {
   }
   runAndDebug (promise, payload) {
     let { doDebug } = this
-    let debugData = createDebugData(payload)
+    let debugData = createDebugData(payload, this)
     return runAndDebug(promise, debugData, doDebug)
   }
 
@@ -124,12 +124,13 @@ async function runAndDebug (promise, debugData, debugCb) {
   }
 }
 
-function createDebugData (payload) {
+function createDebugData (payload, { url }) {
   if (Array.isArray(payload)) {
     let method = [...new Set(payload.map(({ method }) => method))]
     let params = payload.map(({ params }) => params)
-    return { method, params }
+    return { method, params, url }
   }
+  payload.url = url
   return payload
 }
 

@@ -9,13 +9,14 @@ describe('Debug Mode', function () {
   const debug = (res) => results.push(res)
   let nod3 = nod3Creator(null, { debug })
 
-  it('should add a response time', async () => {
+  it('should report to debugger', async () => {
     const block = await nod3.eth.getBlock('latest', true)
     nod3.setDebug(debug)
     let stats = results[0]
     validateBlock(block)
     expect(stats).to.be.an('object')
-    let { method, params, time } = stats
+    let { method, params, time, url } = stats
+    expect(url).to.be.equal(nod3.provider.url)
     expect(method).to.be.equal('eth_getBlockByNumber')
     expect(params).to.be.deep.equal(['latest', true])
     expect(time).to.be.a('number')
