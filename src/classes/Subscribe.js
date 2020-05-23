@@ -10,7 +10,7 @@ export class Subscribe {
     this.subscriptions = new Map()
     this.provider = provider
     this.rpc = provider.rpc
-    this.send = Nod3.send.bind(provider)
+    this.send = Nod3.send.bind(nod3)
     this.sid = 0
   }
   async filter (filterName) {
