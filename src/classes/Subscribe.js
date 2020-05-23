@@ -15,7 +15,7 @@ export class Subscribe {
   }
   async filter (filterName) {
     try {
-      if (!filterName) throw new Error('Invalid Arguments')
+      if (typeof filterName !== 'string') throw new Error('The filter name must be a string')
       let filterDef = filters[filterName]
       if (!filterDef) throw new Error(`Unknown filter: ${filterName}`)
       filterDef = filterDef()
