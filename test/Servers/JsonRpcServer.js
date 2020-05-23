@@ -77,6 +77,7 @@ export function JsonRpcServer (url) {
   // defaults methods
   addMethod('get_OK', () => 'OK')
   addMethod('get_error', () => new JsonRpcServerError('error'))
+  addMethod('eth_getFilterChanges', ([id]) => { return { id } })
 
   const run = (methodName, params) => {
     let method = methods[methodName]
@@ -148,6 +149,7 @@ export function JsonRpcServer (url) {
     })
   }
 
+  const close = () => server.close()
   const create = (url) => {
     try {
       url = HttpServer.parseUrl(url)
@@ -167,7 +169,7 @@ export function JsonRpcServer (url) {
     }
   }
   if (url) server = create(url)
-  return Object.freeze({ create, addMethod, server, methods })
+  return Object.freeze({ create, addMethod, server, methods, close })
 }
 
 export default JsonRpcServer
