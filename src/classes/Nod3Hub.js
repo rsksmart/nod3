@@ -7,10 +7,12 @@ export const NOD3_HUB_NAME = 'isNod3Hub'
 export function Nod3Hub (providers, options = {}) {
   const instances = providers.map(provider => new Nod3(provider))
   const next = RoundRobin(instances)
-  return new Proxy({}, {
+  let subsKey = 0
+  const getSubscriptionInstance = () => instances[subsKey]
+  const nod3 = new Proxy({}, {
     get: function (obj, prop) {
       if (prop === NOD3_HUB_NAME) return true
-      if (prop === 'subscribe') return instances[0][prop]
+      if (prop === 'subscribe') return getSubscriptionInstance()[prop]
       return next()[prop]
     },
     set: function (obj, prop, value) {
@@ -23,6 +25,7 @@ export function Nod3Hub (providers, options = {}) {
       return next().apply(fn, args)
     }
   })
+  return Object.freeze({ nod3 })
 }
 
 export default Nod3Hub

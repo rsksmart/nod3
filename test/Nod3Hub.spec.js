@@ -10,7 +10,7 @@ const servers = urls.map(url => createServer(url))
 
 describe(`# Nod3Hub`, function () {
   this.afterAll(() => servers.map(server => server.close()))
-  const nod3 = Nod3Hub(urls.map(url => new HttpProvider(url)))
+  const { nod3 } = Nod3Hub(urls.map(url => new HttpProvider(url)))
 
   it('should be a nod3Hub instance', () => {
     assert.equal(nod3[NOD3_HUB_NAME], true)
