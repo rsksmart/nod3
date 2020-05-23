@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 import { Nod3 } from '../classes/Nod3'
 
+const URL_ARG_NAME = 'NOD3_CLI_URL'
+
 const command = process.argv[2]
 if (!command) help()
 const curlOption = '--curl'
 const curl = process.argv.find(v => v === curlOption)
 let url = process.argv.find(v => /^https?:\/\//.test(v))
-url = url || process.env['URL'] || 'http://localhost:4444'
+url = url || process.env[URL_ARG_NAME] || 'http://localhost:4444'
 const Provider = (curl) ? Nod3.providers.CurlProvider : Nod3.providers.HttpProvider
 const nod3 = new Nod3(new Provider(url))
 exec(command)
@@ -36,6 +38,7 @@ function help () {
   console.log()
   console.log('Example:')
   console.log(` ${name} eth.getBlock[200]`)
+  console.log(`To avoid to type the url, you can set it in the environment variable: ${URL_ARG_NAME}`)
   process.exit(0)
 }
 
