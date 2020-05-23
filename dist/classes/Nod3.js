@@ -13,7 +13,7 @@ class Nod3 {
     this.provider = provider;
     this.rpc = provider.rpc;
     this.log = logger || function (err) {console.log(err);};
-    if (debug && typeof debug !== 'function') debug = this.logDebug;
+    if (debug && typeof debug !== 'function') debug = res => this.logDebug(res);
     this.doDebug = debug;
     this.isBatch = isBatch;
     this.BATCH_KEY = BATCH_KEY;

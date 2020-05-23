@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.toDecimal = exports.toBase10 = exports.isNet = exports.netName = exports.toHexStr = exports.isHexStr = exports.isHashOrNumber = exports.isBlockHash = exports.checkBlockHash = void 0;var _types = require("./types");
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.RoundRobin = exports.toDecimal = exports.toBase10 = exports.isNet = exports.netName = exports.toHexStr = exports.isHexStr = exports.isHashOrNumber = exports.isBlockHash = exports.checkBlockHash = void 0;var _types = require("./types");
 
 const checkBlockHash = value => {
   value = String(value).toLowerCase();
@@ -34,3 +34,12 @@ const toBase10 = (value, asNumber = false) => {
 };exports.toBase10 = toBase10;
 
 const toDecimal = value => undefined !== value ? parseInt(toBase10(value)) : value;exports.toDecimal = toDecimal;
+
+const RoundRobin = (arr, index) => {
+  index = index || 0;
+  if (!Array.isArray(arr)) throw new Error('The first argument must be an array');
+  return () => {
+    if (index >= arr.length) index = 0;
+    return arr[index++];
+  };
+};exports.RoundRobin = RoundRobin;
