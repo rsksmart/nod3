@@ -34,3 +34,12 @@ export const toBase10 = (value, asNumber = false) => {
 }
 
 export const toDecimal = value => (undefined !== value) ? parseInt(toBase10(value)) : value
+
+export const RoundRobin = (arr, index) => {
+  index = index || 0
+  if (!Array.isArray(arr)) throw new Error('The first argument must be an array')
+  return () => {
+    if (index >= arr.length) index = 0
+    return arr[index++]
+  }
+}
