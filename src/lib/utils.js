@@ -24,7 +24,7 @@ export const toHexStr = (value, ox = '0x') => {
   return (parseInt(hex) === Number(value)) ? hex : value
 }
 
-export const netName = id => NETWORKS[id]
+export const netName = id => NETWORKS[id] || ''
 export const isNet = (id, name) => netName(id) === name
 
 export const toBase10 = (value, asNumber = false) => {
