@@ -19,7 +19,7 @@ describe('Test subscribe.clear', function () {
     expect(subs.length).to.be.equal(list.length)
   })
 
-  it('should be remove all subscriptions', async function () {
+  it('should remove all subscriptions', async function () {
     await nod3.subscribe.clear()
     let total = nod3.subscribe.list()
     expect(total).to.be.an('array')

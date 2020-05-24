@@ -8,12 +8,12 @@ let nod3 = global.nod3 || nod3Creator()
 describe(`# getBlock`, () => {
   let block
 
-  it(`should be return a block by decimal number: #${blockNumber}`, async () => {
+  it(`should return a block by decimal number: #${blockNumber}`, async () => {
     block = await nod3.eth.getBlock(blockNumber)
     validateBlock(block)
   })
 
-  it('should be return a block by hash', async () => {
+  it('should return a block by hash', async () => {
     let hash = block.parentHash
     block = null
     block = await nod3.eth.getBlock(hash)

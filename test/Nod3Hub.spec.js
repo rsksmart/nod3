@@ -69,7 +69,7 @@ describe(`# Nod3Hub`, function () {
         assert.equal(hub.subscriber.get().provider.url, urls[0])
       })
 
-      it('should be remove the subscriber', () => {
+      it('should remove the subscriber', () => {
         hub.subscriber.clear()
         assert.isUndefined(hub.subscriber.get())
       })

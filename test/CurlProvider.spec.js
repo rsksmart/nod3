@@ -3,11 +3,11 @@ import { nod3Creator } from './shared'
 import childProcess from 'child_process'
 import { assert } from 'chai'
 
-const nod3 = nod3Creator()
+const nod3 = nod3Creator(null, { skipFormatters: true })
 const nod3Curl = nod3Creator(CurlProvider)
 const exec = childProcess.execSync
 const test = [
-  ['eth', 'getBlock', [200]],
+  ['eth', 'getBlock', [20]],
   ['net', 'version', []]
 ]
 describe(`#Curl provider`, function () {

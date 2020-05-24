@@ -6,7 +6,7 @@ let nod3 = global.nod3
 describe('# RSK', () => {
   describe('getBlocksByNumber', () => {
 
-    it('should be return an array', async () => {
+    it('should return an array', async () => {
       let blocks = await nod3.rsk.getBlocksByNumber(blockNumber)
       expect(blocks).to.be.an('array')
     })

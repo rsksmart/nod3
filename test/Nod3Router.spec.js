@@ -4,7 +4,7 @@ import { assert } from 'chai'
 import { JsonRpcServer } from './Servers/JsonRpcServer'
 
 const host = 'http://127.0.0.1'
-const urls = [7007, 8008].map(port => `${host}:${port}`)
+const urls = [7057, 8058].map(port => `${host}:${port}`)
 
 const servers = urls.map(url => createServer(url))
 const { nod3, router } = Nod3Router(urls.map(url => new HttpProvider(url)), { skipFormatters: true })

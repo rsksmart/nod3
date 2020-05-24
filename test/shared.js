@@ -16,7 +16,7 @@ export const testNod3 = (nod3, options) => {
 
   describe(`batch request: getBlock [${total}]`, () => {
     describe(`# by NUMBER `, () => {
-      it(`should be return an array of ${total} values`, async () => {
+      it(`should return an array of ${total} values`, async () => {
         let data = await nod3.batchRequest(params, 'eth.getBlock')
         expect(data).to.be.an('array')
         expect(data.length).to.be.equal(total)
@@ -30,7 +30,7 @@ export const testNod3 = (nod3, options) => {
         params = data.map(({ hash }) => [hash, false])
 
         describe(`# by HASH `, () => {
-          it(`should be return an array of ${total} blocks`, async () => {
+          it(`should return an array of ${total} blocks`, async () => {
             let data = await nod3.batchRequest(params, 'eth.getBlock')
             expect(data).to.be.an('array')
             expect(data.length).to.be.equal(total)

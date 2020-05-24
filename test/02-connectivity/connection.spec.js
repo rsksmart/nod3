@@ -15,7 +15,7 @@ it('Check internet connection', function () {
   describe(`Testing with blockNumber:${blockNumber}`, () => {
     describe(`HTPP provider`, () => {
       describe('isConnected', () => {
-        it('should be return a boolean', async () => {
+        it('should return a boolean', async () => {
           let connected = await nod3.isConnected()
           console.log('connected:', connected)
           expect(connected).to.be.equal(true || false)

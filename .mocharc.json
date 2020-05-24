@@ -2,6 +2,7 @@
   "recursive": true,
   "require": "@babel/register",
   "sort": true,
+  "ext": "*.spec.js",
   "file": "test/test.js",
   "globals": [
     "global"
