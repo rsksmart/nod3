@@ -9,16 +9,18 @@ const BATCH_KEY = 'isBatch' + Math.random();
 const isBatch = key => key === BATCH_KEY;
 
 class Nod3 {
-  constructor(provider, { logger, debug } = {}) {
+  constructor(provider, { logger, debug, skipFormatters } = {}) {
+    let { url, rpc } = provider;
     this.provider = provider;
-    this.rpc = provider.rpc;
+    this.rpc = rpc;
+    this.url = url;
     this.log = logger || function (err) {console.log(err);};
     if (debug && typeof debug !== 'function') debug = res => this.logDebug(res);
     this.doDebug = debug;
     this.isBatch = isBatch;
     this.BATCH_KEY = BATCH_KEY;
     this.utils = utils;
-    this.skipFormatters = !!(provider instanceof _CurlProvider.CurlProvider);
+    this.skipFormatters = !!(provider instanceof _CurlProvider.CurlProvider) || skipFormatters;
     // modules
     for (let module in _modules.default) {
       this[module] = addModule(_modules.default[module], this);
@@ -39,10 +41,15 @@ class Nod3 {
   isConnected() {
     return this.provider.isConnected();
   }
+  runAndDebug(promise, payload) {
+    let { doDebug } = this;
+    let debugData = createDebugData(payload, this);
+    return runAndDebug(promise, debugData, doDebug);
+  }
 
   async batchRequest(commands, methodName) {
     try {
-      let { doDebug } = this;
+      let { rpc } = this;
       let batch = commands.map(c => {
         let mName = methodName || c[0];
         mName = mName.split('.');
@@ -54,14 +61,7 @@ class Nod3 {
         return method(...params, this.BATCH_KEY);
       });
       let payload = batch.map(b => this.rpc.toPayload(b.method, b.params));
-      let time = doDebug ? Date.now() : undefined;
-      let data = await this.rpc.send(payload);
-      if (doDebug) {
-        time = Date.now() - time;
-        let method = [...new Set(payload.map(({ method }) => method))];
-        let params = payload.map(({ params }) => params);
-        doDebug({ method, params, time });
-      }
+      let data = await this.runAndDebug(rpc.send(payload), payload);
       return data.map((d, i) => format(d, batch[i].formatters));
     } catch (err) {
       return Promise.reject(err);
@@ -70,13 +70,8 @@ class Nod3 {
 
   static async send(payload) {
     let { method, params, formatters } = payload;
-    let { rpc, skipFormatters, doDebug } = this;
-    let time = doDebug ? Date.now() : null;
-    let res = await rpc.sendMethod(method, params);
-    if (doDebug) {
-      time = Date.now() - time;
-      doDebug({ method, params, time });
-    }
+    let { rpc, skipFormatters } = this;
+    let res = await this.runAndDebug(rpc.sendMethod(method, params), payload);
     return skipFormatters === true ? res : format(res, formatters);
   }}exports.Nod3 = Nod3;
 
@@ -112,6 +107,31 @@ function addModule(mod, nod3) {
 
     } });
 
+}
+
+async function runAndDebug(promise, debugData, debugCb) {
+  try {
+    let time = typeof debugCb === 'function' ? Date.now() : undefined;
+    let result = await promise;
+    if (time) {
+      time = Date.now() - time;
+      debugData.time = Date.now() - time;
+      debugCb(debugData);
+    }
+    return result;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+function createDebugData(payload, { url }) {
+  if (Array.isArray(payload)) {
+    let method = [...new Set(payload.map(({ method }) => method))];
+    let params = payload.map(({ params }) => params);
+    return { method, params, url };
+  }
+  payload.url = url;
+  return payload;
 }
 
 Nod3.providers = { HttpProvider: _HttpProvider.HttpProvider, CurlProvider: _CurlProvider.CurlProvider };
