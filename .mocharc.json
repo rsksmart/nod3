@@ -3,6 +3,7 @@
   "require": "@babel/register",
   "sort": true,
   "ext": "*.spec.js",
+  "exit": true,
   "file": "test/test.js",
   "globals": [
     "global"
