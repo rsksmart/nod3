@@ -57,57 +57,8 @@ describe(`# Nod3Hub`, function () {
         assert.equal(hub.getNodeKeyByUrl(url), key)
       }
     })
-
-    it('As default the subscriber should be undefined', () => {
-      assert.isUndefined(hub.subscriber.get())
-    })
-
-    describe(`subscriber methods`, function () {
-
-      it('should set the subscriber', () => {
-        hub.subscriber.set(0)
-        assert.equal(hub.subscriber.get().provider.url, urls[0])
-      })
-
-      it('should remove the subscriber', () => {
-        hub.subscriber.clear()
-        assert.isUndefined(hub.subscriber.get())
-      })
-
-      it('should return the subscription instance', () => {
-        hub.subscriber.set(1)
-        assert.isDefined(hub.subscriber.get().provider.url)
-      })
-
-      it(`hub.changeSubscriber() should change the subscription instance`, () => {
-        let key = 1
-        hub.subscriber.set(key)
-        assert.equal(hub.subscriber.get().provider.url, urls[key])
-        assert.equal(nod3.subscribe.provider.url, urls[key])
-      })
-    })
-
-    describe('When subscriber is set', function () {
-      testSubscribe(nod3, 'method', 'eth.blockNumber')
-      testSubscribe(nod3, 'filter', 'newBlock')
-    })
   })
 })
-
-function testSubscribe (nod3, type, name) {
-
-  it(`All subscribe.${type} should be managed by the same instance`, async () => {
-    hub.subscriber.set(2)
-    const key = urls.indexOf(nod3.subscribe.provider.url)
-    assert.equal(nod3.subscribe.provider.url, urls[key])
-    assert.equal(nod3.subscribe.provider.url, urls[key])
-    let subscription = await nod3.subscribe[type](name, [])
-    assert.equal(typeof subscription, 'object')
-    assert.equal(nod3.subscribe.provider.url, urls[key])
-    subscription.watch(() => subscription.delete())
-    assert.equal(nod3.subscribe.provider.url, urls[key])
-  })
-}
 
 function createServer (url) {
   let block = 0
@@ -118,6 +69,5 @@ function createServer (url) {
       url
     }
   })
-  server.addMethod('eth_newBlockFilter', () => 1)
   return server
 }
