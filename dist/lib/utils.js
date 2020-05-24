@@ -24,7 +24,7 @@ const toHexStr = (value, ox = '0x') => {
   return parseInt(hex) === Number(value) ? hex : value;
 };exports.toHexStr = toHexStr;
 
-const netName = id => _types.NETWORKS[id];exports.netName = netName;
+const netName = id => _types.NETWORKS[id] || '';exports.netName = netName;
 const isNet = (id, name) => netName(id) === name;exports.isNet = isNet;
 
 const toBase10 = (value, asNumber = false) => {

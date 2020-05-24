@@ -114,7 +114,6 @@ async function runAndDebug(promise, debugData, debugCb) {
     let time = typeof debugCb === 'function' ? Date.now() : undefined;
     let result = await promise;
     if (time) {
-      time = Date.now() - time;
       debugData.time = Date.now() - time;
       debugCb(debugData);
     }
