@@ -9,7 +9,7 @@ const BATCH_KEY = 'isBatch' + Math.random()
 const isBatch = key => key === BATCH_KEY
 
 export class Nod3 {
-  constructor (provider, { logger, debug } = {}) {
+  constructor (provider, { logger, debug, skipFormatters } = {}) {
     let { url, rpc } = provider
     this.provider = provider
     this.rpc = rpc
@@ -20,7 +20,7 @@ export class Nod3 {
     this.isBatch = isBatch
     this.BATCH_KEY = BATCH_KEY
     this.utils = utils
-    this.skipFormatters = !!(provider instanceof CurlProvider)
+    this.skipFormatters = !!(provider instanceof CurlProvider) || skipFormatters
     // modules
     for (let module in modules) {
       this[module] = addModule(modules[module], this)
