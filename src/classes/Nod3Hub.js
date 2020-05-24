@@ -28,7 +28,7 @@ function Hub (instances) {
   return Object.freeze({ next, getNode, getNodeByUrl, getNodeKeyByUrl, subscriber })
 }
 
-export function Nod3Hub (providers, options = {}) {
+export function Nod3Hub (providers, options = {}, routeTo) {
   const instances = providers.map(provider => new Nod3(provider))
   const hub = Hub(instances)
 
@@ -38,6 +38,10 @@ export function Nod3Hub (providers, options = {}) {
       if (prop === 'subscribe') {
         let instance = hub.subscriber.get() || hub.next()
         return instance[prop]
+      }
+      if (routeTo) {
+        let instance = hub.getNode(routeTo(prop))
+        if (instance) return instance[prop]
       }
       return hub.next()[prop]
     },
