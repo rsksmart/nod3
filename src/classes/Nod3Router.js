@@ -6,6 +6,8 @@ import modules from '../modules'
   return v
 }, {}) */
 
+const SUBSCRIBE = 'subscribe'
+
 const getModule = name => {
   if (!modules[name]) throw new Error(`Unknown module: ${name}`)
   return modules[name]
@@ -32,7 +34,7 @@ export function Nod3Router (providers, options = {}) {
   const add = ({ module, to }) => {
     to = parseInt(to)
     if (isNaN(to) || !hub.getNode(to)) throw new Error(`Invalid key: ${to}`)
-    if (getModule(module)) routes[module] = to
+    if (module === SUBSCRIBE || getModule(module)) routes[module] = to
   }
   const remove = (item) => {
     delete routes[item]
