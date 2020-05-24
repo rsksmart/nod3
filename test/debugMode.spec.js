@@ -35,6 +35,7 @@ describe('Debug Mode', function () {
     expect(result.params.length).to.be.deep.equal(params.length)
     expect(result.time).to.be.a('number')
     expect(result.time).to.be.greaterThan(0)
+    expect(result.time).to.be.lessThan(2000)
   })
 
   it(`should add the debug method`, async () => {
