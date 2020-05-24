@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { nod3Creator } from './shared'
-import { validateBlock } from './eth/block.shared'
+import { nod3Creator } from '../shared'
+import { validateBlock } from '../eth/block.shared'
 import * as sinon from 'sinon'
 
 describe('Debug Mode', function () {

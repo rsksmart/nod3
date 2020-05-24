@@ -1,5 +1,5 @@
 
-import { nod3Creator } from './shared'
+import { nod3Creator } from '../shared'
 import { expect } from 'chai'
 const nod3 = global.nod3 || nod3Creator()
 

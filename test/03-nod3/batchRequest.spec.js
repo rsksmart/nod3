@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { nod3Creator } from './shared'
+import { nod3Creator } from '../shared'
 
 let nod3 = global.nod3 || nod3Creator()
 

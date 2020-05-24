@@ -1,6 +1,6 @@
 import { assert } from 'chai'
-import { Nod3 } from '../src/classes/Nod3'
-import { HttpProvider } from '../src/classes/HttpProvider'
+import { Nod3 } from '../../src/classes/Nod3'
+import { HttpProvider } from '../../src/classes/HttpProvider'
 
 const url = 'http://localhost:9009'
 describe('Initialization', function () {

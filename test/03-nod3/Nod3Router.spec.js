@@ -1,7 +1,7 @@
-import { Nod3Router } from '../src/classes/Nod3Router'
-import { HttpProvider } from '../src/classes/HttpProvider'
+import { Nod3Router } from '../../src/classes/Nod3Router'
+import { HttpProvider } from '../../src/classes/HttpProvider'
 import { assert } from 'chai'
-import { JsonRpcServer } from './Servers/JsonRpcServer'
+import { JsonRpcServer } from '../Servers/JsonRpcServer'
 
 const host = 'http://127.0.0.1'
 const urls = [7057, 8058].map(port => `${host}:${port}`)

@@ -1,5 +1,5 @@
-import { CurlProvider } from '../src/classes/CurlProvider'
-import { nod3Creator } from './shared'
+import { CurlProvider } from '../../src/classes/CurlProvider'
+import { nod3Creator } from '../shared'
 import childProcess from 'child_process'
 import { assert } from 'chai'
 
@@ -10,7 +10,7 @@ const test = [
   ['eth', 'getBlock', [20]],
   ['net', 'version', []]
 ]
-describe(`#Curl provider`, function () {
+describe(`# Curl provider`, function () {
   this.timeout(9000)
   for (let t of test) {
     let [module, action, params] = t

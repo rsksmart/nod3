@@ -1,7 +1,7 @@
-import { Nod3Hub, NOD3_HUB_NAME } from '../src/classes/Nod3Hub'
-import { HttpProvider } from '../src/classes/HttpProvider'
+import { Nod3Hub, NOD3_HUB_NAME } from '../../src/classes/Nod3Hub'
+import { HttpProvider } from '../../src/classes/HttpProvider'
 import { assert } from 'chai'
-import { JsonRpcServer } from './Servers/JsonRpcServer'
+import { JsonRpcServer } from '../Servers/JsonRpcServer'
 
 const host = 'http://127.0.0.1'
 const urls = [7007, 8008, 9009].map(port => `${host}:${port}`)
