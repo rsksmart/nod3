@@ -3,18 +3,19 @@ jobs:
   build:
     working_directory: ~/tmp
     environment:
-      RSK_NODE_PATH: ~/tmp/rsk-node
-      DB_PATH: ~/tmp/rsk-node/db
+      RSK_NODE_PATH: rsk-node
+      JAR: rsk-node/rsk.jar
+      DB_PATH: rsk-node/db
     docker:
       - image: circleci/openjdk:8-jdk-node
 
     steps:
       - checkout
       - run:
-          name: 'Install dependencies'
+          name: Install dependencies
           command: npm install
       - run:
-          name: Compile rskj
+          name: Clone rskj
           command: |
             cd ~/tmp
             mkdir -p ${RSK_NODE_PATH}
@@ -24,11 +25,26 @@ jobs:
             cd rskj
             LASTEST_TAG=$(git tag --sort=-creatordate | head -1)
             git checkout ${LATEST_TAG}
-            ./configure.sh
-            ./gradlew clean build -x test
-            cd ~/tmp
-            ls ~/tmp/rskj/rskj-core/build/libs/rskj-core-*-all.jar
-            ln -s  ~/tmp/rskj/rskj-core/build/libs/rskj-core-*-all.jar ${RSK_NODE_PATH}/rsk.jar
+            echo $(git rev-parse HEAD) > ~/tmp/_rskj-cacheKey.txt
+      - restore_cache:
+          key: rskj--{{ checksum "~/tmp/_rskj-cacheKey.txt" }} 
+      - run:
+          name: Compile rskj
+          command: |
+            ls $RSK_NODE_PATH
+            if [ ! -e "~/tmp/$JAR" ]; then
+               cd ~/tmp/rskj
+              ./configure.sh
+              ./gradlew clean build -x test
+              cd ~/tmp
+              ls ~/tmp/rskj/rskj-core/build/libs/rskj-core-*-all.jar
+            fi
+            ln -s  ~/tmp/rskj/rskj-core/build/libs/rskj-core-*-all.jar ~/tmp/${JAR}  
+      - save_cache:
+          paths:
+            - rskj/rskj-core/build/libs
+            - ${JAR}
+          key: rskj--{{ checksum "~/tmp/_rskj-cacheKey.txt" }}
       - run:
           name: Start rskj node
           command: |
@@ -42,7 +58,7 @@ jobs:
           name: 'Lint'
           command: npm run lint
       - run:
-          name: 'Wait for block'
+          name: Wait for block
           command: |
             chmod +x ./test/waitForBlock.sh
             ./test/waitForBlock.sh 20
