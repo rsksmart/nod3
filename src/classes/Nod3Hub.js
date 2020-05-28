@@ -7,9 +7,13 @@ export const NOD3_HUB_NAME = 'isNod3Hub'
 function Hub (instances) {
   const next = RoundRobin(instances)
   const getNode = key => instances[key]
-  const getNodeByUrl = url => instances.find(({ provider }) => provider.url === url)
-  const getNodeKeyByUrl = url => instances.findIndex(({ provider }) => provider.url === url)
-  return Object.freeze({ next, getNode, getNodeByUrl, getNodeKeyByUrl })
+  const searchNode = cb => {
+    let key = instances.findIndex(cb)
+    if (undefined === key) return key
+    let nod3 = instances[key]
+    return { nod3, key }
+  }
+  return Object.freeze({ next, getNode, searchNode })
 }
 
 export function Nod3Hub (providers, options = {}, routeTo) {
