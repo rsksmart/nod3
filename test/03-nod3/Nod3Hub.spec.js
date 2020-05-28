@@ -45,16 +45,16 @@ describe(`# Nod3Hub`, function () {
 
   describe(' hub', function () {
 
-    it(`should return instances by url`, () => {
-      for (let url of urls) {
-        assert.equal(hub.getNodeByUrl(url).provider.url, url)
-      }
+    it(`searchNode() should throw a TypeError if the argument is not a function`, () => {
+      assert.throw(() => hub.searchNode(true), TypeError)
     })
 
-    it(`should return instances keys by url`, () => {
+    it(`should search instances by url`, () => {
       for (let key in urls) {
         let url = urls[key]
-        assert.equal(hub.getNodeKeyByUrl(url), key)
+        const res = hub.searchNode((i) => i.url === url)
+        assert.equal(res.nod3.url, url)
+        assert.equal(res.key, key)
       }
     })
   })
