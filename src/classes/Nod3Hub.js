@@ -16,15 +16,15 @@ function Hub (instances) {
   return Object.freeze({ next, getNode, searchNode })
 }
 
-export function Nod3Hub (providers, options = {}, routeTo) {
-  const instances = providers.map(provider => new Nod3(provider))
+export function Nod3Hub (providers, options = {}, { routeTo } = {}) {
+  const instances = providers.map(provider => new Nod3(provider, options))
   const hub = Hub(instances)
 
   const nod3 = new Proxy({}, {
     get: function (obj, prop) {
       if (prop === NOD3_HUB_NAME) return true
       if (routeTo) {
-        let instance = hub.getNode(routeTo(prop))
+        let instance = hub.getNode(routeTo({ module: prop }))
         if (instance) return instance[prop]
       }
       return hub.next()[prop]
