@@ -22,14 +22,14 @@ export function Nod3Router (providers, options = {}) {
     return routes[module]
   }
 
-  const routeTo = module => {
+  const routeTo = ({ module, method }) => {
     let key = resolve({ module })
     if (undefined !== key) {
       return key
     }
   }
 
-  const { hub, nod3 } = Nod3Hub(providers, options, routeTo)
+  const { hub, nod3 } = Nod3Hub(providers, options, { routeTo })
 
   const add = ({ module, to }) => {
     to = parseInt(to)
