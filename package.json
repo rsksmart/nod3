@@ -8,7 +8,8 @@
     "clean": "rm -rf dist",
     "md": "mkdir dist",
     "lint": "npx eslint src/**/*",
-    "test": "npx mocha ./test/**/*.spec.js"
+    "test": "npx mocha ./test/**/*.spec.js",
+    "doc": "node ./.doc/makeReadme.js > ./doc/Nod3.md"
   },
   "bin": {
     "nod3-cli": "./dist/cli/nod3-cli.js"
@@ -40,6 +41,7 @@
     "eslint-plugin-standard": "^3.1.0",
     "mocha": "^7.1.1",
     "mocha-eslint": "^4.1.0",
-    "sinon": "^7.3.1"
+    "sinon": "^7.3.1",
+    "rskjs-jsdoc2md": "git+https://github.com/rsksmart/rskjs-jsdoc2md.git"
   }
 }
