@@ -20,6 +20,7 @@ export class Nod3 {
     this.isBatch = isBatch
     this.BATCH_KEY = BATCH_KEY
     this.utils = utils
+    this.requesting = new Map()
     this.skipFormatters = !!(provider instanceof CurlProvider) || skipFormatters
     // modules
     for (let module in modules) {
@@ -37,14 +38,29 @@ export class Nod3 {
   setSkipFormatters (v) {
     this.skipFormatters = !!v
   }
+  isRequesting () {
+    let { requesting } = this
+    if (requesting.size === 0) return false
+    let first = Math.min.apply(null, [...requesting.values()].map(({ time }) => time))
+    return Date.now() - first
+  }
 
   isConnected () {
     return this.provider.isConnected()
   }
-  runAndDebug (promise, payload) {
-    let { doDebug } = this
-    let debugData = createDebugData(payload, this)
-    return runAndDebug(promise, debugData, doDebug)
+  async runAndDebug (promise, payload) {
+    try {
+      let { doDebug, requesting } = this
+      let debugData = createDebugData(payload, this)
+      let time = Date.now()
+      let key = time.toString(36) + Math.random().toString(36).slice(2)
+      requesting.set(key, { time })
+      let res = await runAndDebug(promise, debugData, doDebug)
+      requesting.delete(key)
+      return res
+    } catch (err) {
+      return Promise.reject(err)
+    }
   }
 
   async batchRequest (commands, methodName) {

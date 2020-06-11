@@ -69,3 +69,9 @@ export const checkDecimalFields = (result, fields) => () => {
 }
 
 export const getRandomBlockNumber = (max = 20) => Math.floor(Math.random() * max)
+
+export const wait = ms => {
+  let time = Date.now() + ms
+  while (time > Date.now()) {
+  }
+}
