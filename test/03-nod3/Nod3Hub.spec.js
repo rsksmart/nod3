@@ -1,4 +1,5 @@
-import { Nod3Hub, NOD3_HUB_NAME } from '../../src/classes/Nod3Hub'
+import { Nod3Hub } from '../../src/classes/Nod3Hub'
+import { NOD3_HUB } from '../../src/lib/types'
 import { HttpProvider } from '../../src/classes/HttpProvider'
 import { assert } from 'chai'
 import { JsonRpcServer } from '../Servers/JsonRpcServer'
@@ -14,7 +15,7 @@ describe(`# Nod3Hub`, function () {
 
   describe(' nod3', function () {
     it('should be a nod3Hub instance', () => {
-      assert.equal(nod3[NOD3_HUB_NAME], true)
+      assert.equal(nod3[NOD3_HUB], true)
     })
 
     it(`should return a different instance every time`, () => {

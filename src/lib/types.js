@@ -25,3 +25,4 @@ export const SUBSCRIPTIONS = {
 }
 
 export const NOD3_MODULE = 'nod3Module'
+export const NOD3_HUB = 'isNod3Hub'

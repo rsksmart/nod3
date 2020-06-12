@@ -1,8 +1,7 @@
 
 import { Nod3 } from './Nod3'
+import { NOD3_MODULE, NOD3_HUB } from '../lib/types'
 import { RoundRobin } from '../lib/utils'
-
-export const NOD3_HUB_NAME = 'isNod3Hub'
 
 function Hub (instances) {
   const next = RoundRobin(instances)
@@ -22,7 +21,7 @@ export function Nod3Hub (providers, options = {}, { routeTo } = {}) {
 
   const nod3 = new Proxy({}, {
     get: function (obj, prop) {
-      if (prop === NOD3_HUB_NAME) return true
+      if (prop === NOD3_HUB) return true
       if (routeTo) {
         let instance = hub.getNode(routeTo({ module: prop }))
         if (instance) return instance[prop]
