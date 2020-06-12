@@ -2,6 +2,7 @@ import { Nod3Router } from '../../src/classes/Nod3Router'
 import { HttpProvider } from '../../src/classes/HttpProvider'
 import { assert } from 'chai'
 import { JsonRpcServer } from '../Servers/JsonRpcServer'
+import { wait } from '../shared'
 
 const host = 'http://127.0.0.1'
 const urls = [7057, 8058, 9059].map(port => `${host}:${port}`)
@@ -24,6 +25,7 @@ describe(`# Nod3Router`, function () {
   })
 
   describe('routes', function () {
+
     it('should add a route', () => {
       let module = 'trace'
       let to = 1
@@ -31,13 +33,23 @@ describe(`# Nod3Router`, function () {
       assert.propertyVal(router.getRoutes(), module, to)
     })
 
-    it('it should throw an error', () => {
+    it('router.add() should throw an error when invalid arguments are passed', () => {
       assert.throw(() => router.add())
       assert.throw(() => router.add('foo'))
       assert.throw(() => router.add('trace', 9))
     })
 
-    it('should remove a route', () => {
+    it('router.add() should throw an error when "to" is invalid', () => {
+      assert.throw(() => router.add({ module: 'trace' }))
+      assert.throw(() => router.add({ module: 'trace', to: 'foo' }))
+    })
+
+    it('router.add() should throw an error for invalid module', () => {
+      assert.throw(() => router.add({ module: 'eth', to: urls.length }))
+      assert.throw(() => router.add({ module: 'bar', to: 1 }))
+    })
+
+    it('router.remove() should remove a route', () => {
       let module = 'trace'
       let to = 1
       router.add({ module, to })
@@ -45,27 +57,60 @@ describe(`# Nod3Router`, function () {
       router.remove(module)
       assert.isUndefined(router.getRoutes()[module])
     })
+
+    it(`router.reset() should remove all routes`, () => {
+      router.add({ module: 'eth', to: 2 })
+      router.add({ module: 'trace', to: 1 })
+      router.add({ module: 'net', to: 1 })
+      assert.equal(Object.keys(router.getRoutes()).length, 3)
+      router.reset()
+      assert.deepEqual(router.getRoutes(), {})
+    })
+
   })
 
   describe('Routing', function () {
-    it('should return a node key', () => {
-      let module = 'eth'
-      let to = 0
-      router.add({ module, to })
-      assert.equal(router.resolve(module, to))
+
+    describe(`By module routes`, function () {
+      it('should return a node key', () => {
+        let module = 'eth'
+        let to = 0
+        router.add({ module, to })
+        assert.equal(router.resolve(module, to))
+      })
+
+      it('should route to', async () => {
+        router.add({ module: 'net', to: 1 })
+        for (let i = 0; i <= urls.length * 2; i++) {
+          let res = await nod3.net.listening()
+          assert.equal(res, urls[1])
+        }
+      })
     })
 
-    it('should route to', async () => {
-      router.add({ module: 'net', to: 1 })
-      for (let i = 0; i <= urls.length * 2; i++) {
-        let res = await nod3.net.listening()
-        assert.equal(res, urls[1])
-      }
-    })
+    // WIP
+    /*     describe(`By method routes`, function () {
+          it('should return a node key', () => {
+            let module = 'eth'
+            let to = 0
+            router.add({ module, to })
+            assert.equal(router.resolve(module, to))
+          })
+    
+          it('should route to', async () => {
+            router.add({ module: 'net', to: 1 })
+            for (let i = 0; i <= urls.length * 2; i++) {
+              let res = await nod3.net.listening()
+              assert.equal(res, urls[1])
+            }
+          })
+        }) */
+
     describe('When subscribe is set:', function () {
       testSubscribe('method', 'eth.blockNumber')
       testSubscribe('filter', 'newBlock')
     })
+
     describe('Subscribe', function () {
       this.timeout(2500)
       let to = urls.length - 1
@@ -90,6 +135,7 @@ function createServer (url) {
   server.addMethod('net_listening', () => { return url })
   server.addMethod('eth_newBlockFilter', () => 1)
   server.addMethod('eth_blockNumber', () => {
+    wait(10)
     return {
       block: block++,
       url

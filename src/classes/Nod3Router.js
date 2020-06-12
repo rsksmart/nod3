@@ -39,7 +39,11 @@ export function Nod3Router (providers, options = {}) {
   const remove = (item) => {
     delete routes[item]
   }
+  const reset = () => {
+    routes = undefined
+    routes = {}
+  }
 
-  const router = Object.freeze({ add, remove, resolve, getRoutes })
+  const router = Object.freeze({ add, remove, reset, resolve, getRoutes })
   return Object.freeze({ nod3, hub, router })
 }
