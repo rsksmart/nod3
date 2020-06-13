@@ -9,8 +9,8 @@ describe('# eth.blockNumber', function () {
     expect(parseInt(blockNumber)).to.be.equal(parseInt(blockNumber))
   })
   it('should be equal to last block', async function () {
-    let blockNumber = await nod3.eth.blockNumber()
     let lastBlock = await nod3.eth.getBlock('latest')
+    let blockNumber = await nod3.eth.blockNumber()
     expect(lastBlock.number).to.be.equal(blockNumber)
   })
 })
