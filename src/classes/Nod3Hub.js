@@ -15,18 +15,42 @@ function Hub (instances) {
   return Object.freeze({ next, getNode, searchNode })
 }
 
+const isNod3Module = thing => typeof thing === 'object' && thing._type === NOD3_MODULE
+
 export function Nod3Hub (providers, options = {}, { routeTo } = {}) {
   const instances = providers.map(provider => new Nod3(provider, options))
   const hub = Hub(instances)
 
-  const nod3 = new Proxy({}, {
-    get: function (obj, prop) {
-      if (prop === NOD3_HUB) return true
-      if (routeTo) {
-        let instance = hub.getNode(routeTo({ module: prop }))
-        if (instance) return instance[prop]
+  const routeToInstance = (routeTo, { module, method }) => {
+    let instance
+    if (typeof routeTo === 'function') {
+      let node = routeTo({ module, method })
+      instance = hub.getNode(node)
+    }
+    return instance
+  }
+
+  const moduleProxy = (module, instanceModule, routeTo) => {
+    return new Proxy(instanceModule, {
+      get: function (obj, method) {
+        // route by method
+        let newInstance = routeToInstance(routeTo, { module, method })
+        return (newInstance) ? newInstance[module][method] : obj[method]
       }
-      return hub.next()[prop]
+    })
+  }
+  // nod3 instance proxy
+  const nod3 = new Proxy({}, {
+    get: function (obj, module) {
+      if (module === NOD3_HUB) return true
+      let instance
+      instance = routeToInstance(routeTo, { module }) || hub.next()
+      let instanceModule = instance[module]
+      // nod3 module proxy
+      if (isNod3Module(instanceModule)) {
+        instanceModule = moduleProxy(module, instanceModule, routeTo)
+      }
+      return instanceModule
     },
     set: function (obj, prop, value) {
       for (let instance of instances) {
