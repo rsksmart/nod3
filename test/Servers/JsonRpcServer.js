@@ -79,23 +79,23 @@ export function JsonRpcServer (url) {
   addMethod('get_error', () => new JsonRpcServerError('error'))
   addMethod('eth_getFilterChanges', ([id]) => { return { id } })
 
-  const run = (methodName, params) => {
+  const run = async (methodName, params) => {
     let method = methods[methodName]
     let data
     if (!method) data = JsonRpcErrors.METHOD_NOT_FOUND
-    else data = method(params)
+    else data = await method(params)
     return data
   }
 
   const requestHandler = (req, res) => {
 
-    const runPayload = payload => {
+    const runPayload = async payload => {
       payload = (Array.isArray(payload)) ? payload : [payload]
-      let data = payload.map(p => {
+      let data = payload.map(async p => {
         let { method, params, id } = p
         id = parseInt(id)
         if (isNaN(id) || id < 1) return jsonResponse({ error: JsonRpcErrors.BAD_REQUEST })
-        let result = run(method, params)
+        let result = await run(method, params)
         return jsonResponse(result, id)
       })
       return (data.length > 1) ? data : data[0]
