@@ -1,29 +1,64 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.Nod3Hub = Nod3Hub;exports.default = exports.NOD3_HUB_NAME = void 0;
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.Nod3Hub = Nod3Hub;exports.default = void 0;
 var _Nod = require("./Nod3");
+var _types = require("../lib/types");
 var _utils = require("../lib/utils");
-
-const NOD3_HUB_NAME = 'isNod3Hub';exports.NOD3_HUB_NAME = NOD3_HUB_NAME;
 
 function Hub(instances) {
   const next = (0, _utils.RoundRobin)(instances);
   const getNode = key => instances[key];
-  const getNodeByUrl = url => instances.find(({ provider }) => provider.url === url);
-  const getNodeKeyByUrl = url => instances.findIndex(({ provider }) => provider.url === url);
-  return Object.freeze({ next, getNode, getNodeByUrl, getNodeKeyByUrl });
+  const searchNode = cb => {
+    let key = instances.findIndex(cb);
+    if (undefined === key) return key;
+    let nod3 = instances[key];
+    return { nod3, key };
+  };
+  return Object.freeze({ next, getNode, searchNode });
 }
 
-function Nod3Hub(providers, options = {}, routeTo) {
-  const instances = providers.map(provider => new _Nod.Nod3(provider));
+const isNod3Module = thing => typeof thing === 'object' && thing._type === _types.NOD3_MODULE;
+
+function Nod3Hub(providers, options = {}, { routeTo } = {}) {
+  const instances = providers.map(provider => new _Nod.Nod3(provider, options));
   const hub = Hub(instances);
 
+  const routeToInstance = (routeTo, { module, method }) => {
+    let instance;
+    if (typeof routeTo === 'function') {
+      let node = routeTo({ module, method });
+      instance = hub.getNode(node);
+    }
+    return instance;
+  };
+
+  const getFreeInstance = instance => {
+    instance = instance || hub.next();
+    if (instance.isRequesting() === false) return instance;
+    let free = instances.find(nod3 => nod3.isRequesting() === false);
+    free = free || instance;
+    return free;
+  };
+
+  const moduleProxy = (module, instanceModule, routeTo) => {
+    return new Proxy(instanceModule, {
+      get: function (obj, method) {
+        // route by method
+        let newInstance = routeToInstance(routeTo, { module, method });
+        return newInstance ? newInstance[module][method] : obj[method];
+      } });
+
+  };
+  // nod3 instance proxy
   const nod3 = new Proxy({}, {
-    get: function (obj, prop) {
-      if (prop === NOD3_HUB_NAME) return true;
-      if (routeTo) {
-        let instance = hub.getNode(routeTo(prop));
-        if (instance) return instance[prop];
+    get: function (obj, module) {
+      if (module === _types.NOD3_HUB) return true;
+      let instance;
+      instance = routeToInstance(routeTo, { module }) || getFreeInstance();
+      let instanceModule = instance[module];
+      // nod3 module proxy
+      if (isNod3Module(instanceModule)) {
+        instanceModule = moduleProxy(module, instanceModule, routeTo);
       }
-      return hub.next()[prop];
+      return instanceModule;
     },
     set: function (obj, prop, value) {
       for (let instance of instances) {

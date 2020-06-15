@@ -1,4 +1,4 @@
-"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.NOD3_MODULE = exports.SUBSCRIPTIONS = exports.NETWORKS = exports.NET_NAMES = exports.RSK_TESTNET = exports.RSK_MAINNET = exports.ETH_MAINNET = void 0;
+"use strict";Object.defineProperty(exports, "__esModule", { value: true });exports.NOD3_HUB = exports.NOD3_MODULE = exports.SUBSCRIPTIONS = exports.NETWORKS = exports.NET_NAMES = exports.RSK_TESTNET = exports.RSK_MAINNET = exports.ETH_MAINNET = void 0;
 const ETH_MAINNET = 'Ethereum Mainnet';exports.ETH_MAINNET = ETH_MAINNET;
 const RSK_MAINNET = 'RSK Mainnet';exports.RSK_MAINNET = RSK_MAINNET;
 const RSK_TESTNET = 'RSK Testnet';exports.RSK_TESTNET = RSK_TESTNET;
@@ -25,3 +25,4 @@ const SUBSCRIPTIONS = {
 
 
 const NOD3_MODULE = 'nod3Module';exports.NOD3_MODULE = NOD3_MODULE;
+const NOD3_HUB = 'isNod3Hub';exports.NOD3_HUB = NOD3_HUB;
