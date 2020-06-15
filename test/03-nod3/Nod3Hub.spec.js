@@ -8,7 +8,7 @@ const host = 'http://127.0.0.1'
 const urls = [7007, 8008, 9009].map(port => `${host}:${port}`)
 
 const servers = urls.map(url => createServer(url))
-const { nod3, hub } = Nod3Hub(urls.map(url => new HttpProvider(url)))
+const { nod3, hub } = Nod3Hub(urls.map(url => new HttpProvider(url)), { skipFormatters: true })
 
 describe(`# Nod3Hub`, function () {
   this.afterAll(() => servers.map(server => server.close()))
@@ -59,6 +59,24 @@ describe(`# Nod3Hub`, function () {
       }
     })
   })
+
+  describe(' load balancing', function () {
+    this.timeout(10000)
+    it('should skip the busy instance', async () => {
+      let { nod3 } = Nod3Hub(urls.map(url => new HttpProvider(url)), { skipFormatters: true })
+      let promise = nod3.eth.syncing()
+      let res = []
+      for (let i = 0; i <= 5; i++) {
+        let { url } = await nod3.eth.blockNumber()
+        res.push(url)
+      }
+      let { url } = await promise
+      res = [...new Set(res)]
+      assert.includeDeepMembers(urls, res)
+      assert.equal(url, urls[0])
+      assert.isFalse(res.includes(url))
+    })
+  })
 })
 
 function createServer (url) {
@@ -69,6 +87,11 @@ function createServer (url) {
       block: block++,
       url
     }
+  })
+  server.addMethod('eth_syncing', () => {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve({ url }), 2000)
+    })
   })
   return server
 }

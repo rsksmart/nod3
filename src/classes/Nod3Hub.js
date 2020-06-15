@@ -30,6 +30,14 @@ export function Nod3Hub (providers, options = {}, { routeTo } = {}) {
     return instance
   }
 
+  const getFreeInstance = (instance) => {
+    instance = instance || hub.next()
+    if (instance.isRequesting() === false) return instance
+    let free = instances.find(nod3 => nod3.isRequesting() === false)
+    free = free || instance
+    return free
+  }
+
   const moduleProxy = (module, instanceModule, routeTo) => {
     return new Proxy(instanceModule, {
       get: function (obj, method) {
@@ -44,7 +52,7 @@ export function Nod3Hub (providers, options = {}, { routeTo } = {}) {
     get: function (obj, module) {
       if (module === NOD3_HUB) return true
       let instance
-      instance = routeToInstance(routeTo, { module }) || hub.next()
+      instance = routeToInstance(routeTo, { module }) || getFreeInstance()
       let instanceModule = instance[module]
       // nod3 module proxy
       if (isNod3Module(instanceModule)) {
