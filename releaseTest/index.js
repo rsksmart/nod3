@@ -1,5 +1,5 @@
 const assert = require('assert')
-const { Nod3, Nod3Hub, NOD3_HUB_NAME, Nod3Router } = require('nod3')
+const { Nod3, Nod3Hub, NOD3_HUB_NAME, Nod3Router } = require('@rsksmart/nod3')
 const { HttpProvider } = Nod3.providers
 
 const url = 'http://localhost'
