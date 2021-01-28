@@ -3,6 +3,10 @@ import { Subscription } from './Subscription'
 import filters from '../lib/filters'
 import { SUBSCRIPTIONS, NOD3_MODULE } from '../lib/types'
 
+/**
+ * @module subscribe
+ * @typicalname nod3.subscribe
+ */
 export class Subscribe {
   constructor (nod3) {
     this.nod3 = nod3
@@ -13,6 +17,10 @@ export class Subscribe {
     this.send = Nod3.send.bind(nod3)
     this.sid = 0
   }
+  /**
+   * @param {*} filterName
+   * @returns {Promise}
+   */
   async filter (filterName) {
     try {
       if (typeof filterName !== 'string') throw new Error('The filter name must be a string')
@@ -28,7 +36,11 @@ export class Subscribe {
       return Promise.reject(err)
     }
   }
-
+  /**
+   * @param {*} name
+   * @param {*} args
+   * @returns {Promise}
+   */
   async method (name, args) {
     try {
       args = args || []

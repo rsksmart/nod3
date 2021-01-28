@@ -8,7 +8,16 @@ import modules from '../modules'
 const BATCH_KEY = 'isBatch' + Math.random()
 const isBatch = key => key === BATCH_KEY
 
+/**
+ * @class Nod3
+ */
 export class Nod3 {
+  /**
+   *Creates an instance of Nod3.
+   * @param {*} provider
+   * @param {*} [{ logger, debug, skipFormatters }={}]
+   * @memberof Nod3
+   */
   constructor (provider, { logger, debug, skipFormatters } = {}) {
     let { url, rpc } = provider
     this.provider = provider
@@ -27,7 +36,10 @@ export class Nod3 {
     }
     this.subscribe = new Subscribe(this)
   }
-
+  /**
+   * @param {*} debug
+   * @memberof Nod3
+   */
   setDebug (debug) {
     this.doDebug = debug
   }
@@ -37,7 +49,9 @@ export class Nod3 {
   setSkipFormatters (v) {
     this.skipFormatters = !!v
   }
-
+  /**
+   * @memberof Nod3
+   */
   isConnected () {
     return this.provider.isConnected()
   }
@@ -46,7 +60,11 @@ export class Nod3 {
     let debugData = createDebugData(payload, this)
     return runAndDebug(promise, debugData, doDebug)
   }
-
+  /**
+   * @param {*} commands
+   * @param {*} methodName
+   * @memberof Nod3
+   */
   async batchRequest (commands, methodName) {
     try {
       let { rpc } = this

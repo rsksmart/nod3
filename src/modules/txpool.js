@@ -1,5 +1,10 @@
 import { txFormatter } from '../lib/formatters'
 
+/**
+ * @module txpool
+* @typicalname nod3.txpool
+ */
+
 export default {
 
   content () {

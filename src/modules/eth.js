@@ -7,7 +7,21 @@ import {
 
 import { isHashOrNumber, toHexStr, toDecimal } from '../lib/utils'
 
+/**
+ * @module eth
+ * @typicalname nod3.eth
+ */
+
 export default {
+
+/**
+*  Returns a block object using eth_getBlockByHash or eth_getBlockByNumber according to the parameters.
+ * @param {String} hashOrNumber BlockHash or blockNumber
+ * @param {Boolean} txs If true it returns the full transaction objects, if false only the hashes of the transactions.
+ * @returns {Promise.<Object>} block object or null
+ * @see https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblockbyhash
+ * @see https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblockbyNumber
+ */
   getBlock (hashOrNumber, txs = false) {
     let method = 'eth_getBlockByNumber'
     let hOn = isHashOrNumber(hashOrNumber)
