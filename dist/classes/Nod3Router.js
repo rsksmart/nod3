@@ -2,9 +2,9 @@
 var _modules = _interopRequireDefault(require("../modules"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 /* const methods = Object.keys(modules).reduce((v, a) => {
-                                                                                                                                                             v[a] = Object.keys(modules[a])
-                                                                                                                                                             return v
-                                                                                                                                                           }, {}) */
+  v[a] = Object.keys(modules[a])
+  return v
+}, {}) */
 
 const SUBSCRIBE = 'subscribe';
 

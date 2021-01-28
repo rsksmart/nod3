@@ -1,6 +1,6 @@
 {
   "name": "@rsksmart/nod3",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Minimal Javascript RPC communication with Ethereum / RSK node",
   "main": "dist/index.js",
   "scripts": {
