@@ -41,10 +41,10 @@ export const blockFormatter = block => {
 
 export const uncleFormatter = block => {
   if (block) {
-    blockFormatter(block)
-  } else {
-    return block
+    return blockFormatter(block)
   }
+
+  return block
 }
 
 export const syncFormatter = sync => {
