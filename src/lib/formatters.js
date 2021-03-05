@@ -39,6 +39,14 @@ export const blockFormatter = block => {
   return block
 }
 
+export const uncleFormatter = block => {
+  if (block) {
+    blockFormatter(block)
+  } else {
+    return block
+  }
+}
+
 export const syncFormatter = sync => {
   if (typeof sync === 'object') {
     return format(sync, {
