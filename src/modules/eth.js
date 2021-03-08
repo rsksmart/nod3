@@ -20,7 +20,7 @@ export default {
     return { method, params, formatters: [blockFormatter] }
   },
 
-  getUncle (number, index = 1) {
+  getUncle (number, index) {
     const method = 'eth_getUncleByBlockNumberAndIndex'
     const hexNumber = toHexStr(number)
     const hexIndex = toHexStr(index)
