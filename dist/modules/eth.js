@@ -78,6 +78,10 @@ var _utils = require("../lib/utils");var _default =
 
   chainId() {
     return { method: 'eth_chainId', formatters: [_utils.toDecimal] };
+  },
+
+  getStorageAt(contract, storageAddr, block = 'latest') {
+    return { method: 'eth_getStorageAt', params: [contract, storageAddr, block] };
   } };exports.default = _default;
 
 
